@@ -21,24 +21,44 @@ public final class SyncMenuService {
         this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
     }
 
-    public void sync(Class<? extends Menu> menuType, List<Page> newPages){
+    public void sync(Class<? extends Menu> menuType, List<Page> newPages, SyncMenuConfiguration syncConfiguration){
+        this.adquiredLocksIfNeccesary(menuType, syncConfiguration);
+
         this.openMenuRepository.findByMenuType(menuType).stream()
                 .filter(menu -> menu.getConfiguration().isSync())
+                .parallel()
                 .forEach(menuToSync -> menuToSync.setPages(mapPages(
                         menuToSync.allPages(),
                         newPages,
                         menuToSync.getConfiguration().getSyncMenuConfiguration()
                 )));
+
+        this.releaseLocksIfNeccesary(menuType, syncConfiguration);
     }
 
     public void sync(Menu originalMenu){
+        this.adquiredLocksIfNeccesary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
+
         this.openMenuRepository.findByMenuType(originalMenu.getClass()).stream()
                 .filter(menu -> !menu.getMenuId().equals(originalMenu.getMenuId()) && menu.getConfiguration().isSync())
+                .parallel()
                 .forEach(menu -> menu.setPages(mapPages(
                         menu.allPages(),
                         originalMenu.allPages(),
                         menu.configuration().getSyncMenuConfiguration()
                 )));
+
+        this.adquiredLocksIfNeccesary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
+    }
+
+    private void adquiredLocksIfNeccesary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
+        if(syncConfiguration.isLockOnSync())
+            this.openMenuRepository.findByMenuType(menuType).forEach(Menu::lockInteractions);
+    }
+
+    private void releaseLocksIfNeccesary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
+        if(syncConfiguration.isLockOnSync())
+            this.openMenuRepository.findByMenuType(menuType).forEach(Menu::unlockInteractions);
     }
 
     private List<Page> mapPages(List<Page> oldPages, List<Page> newPages, SyncMenuConfiguration syncConfig) {

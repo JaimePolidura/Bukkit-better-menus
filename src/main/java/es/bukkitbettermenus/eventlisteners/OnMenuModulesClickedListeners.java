@@ -10,17 +10,16 @@ import org.bukkit.entity.Player;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class OnMenuClickedListeners {
+public final class OnMenuModulesClickedListeners {
     private static final Set<OnMenuClicked> listeners;
 
     static {
         listeners = new HashSet<>();
 
-        OnMenuClickedListeners.listen(new OnConfirmationMenuClicked());
-        OnMenuClickedListeners.listen(new OnNumberSelectorMenuClick());
-        OnMenuClickedListeners.listen(new OnPaginationMenuClicked());
+        OnMenuModulesClickedListeners.listen(new OnConfirmationMenuClicked());
+        OnMenuModulesClickedListeners.listen(new OnNumberSelectorMenuClick());
+        OnMenuModulesClickedListeners.listen(new OnPaginationMenuClicked());
     }
-
 
     public static void listen(OnMenuClicked onMenuClicked){
         listeners.add(onMenuClicked);

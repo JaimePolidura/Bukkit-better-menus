@@ -16,7 +16,10 @@ import java.util.List;
 public final class Page {
     @Getter private final Inventory inventory;
     @Getter private final int[][] itemsNums;
-    private final int[][] baseItemNums;
+
+    public void deleteItem(int slot) {
+        this.inventory.clear(slot);
+    }
 
     public void setItem(int slot, ItemStack newItem, int itemNum){
         this.inventory.setItem(slot, newItem);
@@ -24,6 +27,13 @@ public final class Page {
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
 
         itemsNums[row][column] = itemNum;
+    }
+
+    public int getItemNumBySlot(int slot) {
+        int row = SupportedInventoryType.getRowBySlot(slot, this.inventory.getType());
+        int column = SupportedInventoryType.getColumnBySlot(slot, this.inventory.getType());
+
+        return this.itemsNums[row][column];
     }
 
     public void setItemLore(int slot, List<String> newLore){

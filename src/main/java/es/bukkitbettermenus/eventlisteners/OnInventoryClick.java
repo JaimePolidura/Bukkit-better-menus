@@ -44,31 +44,30 @@ public class OnInventoryClick implements Listener {
     }
 
     private void tryPerformClickOnMenu(InventoryClickEvent event, Menu menu) {
-        InventoryType inventoryType = event.getClickedInventory().getType();
-        int row = SupportedInventoryType.getRowBySlot(event.getSlot(), inventoryType);
-        int column = SupportedInventoryType.getColumnBySlot(event.getSlot(), inventoryType);
-        int itemNumClicked = menu.items()[row][column];
-
         if(menu.getConfiguration().isFixedItems())
             event.setCancelled(true);
 
-        event.getView();
-        boolean inventorTypePlayer = event.getCurrentItem() == null || event.getClickedInventory().getType() == InventoryType.PLAYER;
+        InventoryType inventoryType = event.getClickedInventory().getType();
+        boolean inventorTypePlayer = event.getCurrentItem() == null || inventoryType == InventoryType.PLAYER;
 
         if (!inventorTypePlayer){
+            int row = SupportedInventoryType.getRowBySlot(event.getSlot(), inventoryType);
+            int column = SupportedInventoryType.getColumnBySlot(event.getSlot(), inventoryType);
+            int itemNumClicked = menu.getActualPage().getItemNumBySlot(event.getSlot());
+
             performOnClickInMenu(event, menu, row, column, itemNumClicked);
         }
     }
 
     private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int row, int column, int itemNumClicked) {
-        BiConsumer<Player, InventoryClickEvent> eventConsumer = menu.getConfiguration().getOnClickEventListeners()
-                .get(menu.getActualItemNums()[row][column]);
+        BiConsumer<Player, InventoryClickEvent> onClick = menu.getConfiguration().getOnClickEventListeners()
+                .get(itemNumClicked);
 
-        if (eventConsumer != null){
-            tryToExecuteOnClick(event, eventConsumer);
+        if (onClick != null){
+            tryToExecuteOnClick(event, onClick);
         }
 
-        OnMenuClickedListeners.notify((Player) event.getWhoClicked(), menu, itemNumClicked);
+        OnMenuModulesClickedListeners.notify((Player) event.getWhoClicked(), menu, itemNumClicked);
     }
 
     private void tryToExecuteOnClick(InventoryClickEvent event, BiConsumer<Player, InventoryClickEvent> eventConsumer) {

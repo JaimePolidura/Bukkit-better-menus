@@ -17,18 +17,17 @@ import java.util.Map;
 import java.util.Queue;
 
 public final class MenuBuilderService {
-
     public List<Page> createPages(MenuConfiguration configuration, int[][] baseItemNums){
         List<Page> pages = new LinkedList<>();
 
         Queue<ItemStack> variousItemsItemStack = this.findVariousItems(configuration);
         int variousItemStack = this.findVariousItemsItemNum(configuration);
         BuildItemNumsReult buildItemNumsResult = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
-        pages.add(new Page(buildItemNumsResult.inventory, buildItemNumsResult.itemNums, baseItemNums));
+        pages.add(new Page(buildItemNumsResult.inventory, buildItemNumsResult.itemNums));
 
         while (!variousItemsItemStack.isEmpty()){
             BuildItemNumsReult result = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
-            pages.add(new Page(result.inventory, result.itemNums, baseItemNums));
+            pages.add(new Page(result.inventory, result.itemNums));
         }
 
         return pages;
@@ -55,7 +54,7 @@ public final class MenuBuilderService {
 
         BuildItemNumsReult result = this.createItemNumsArrayForPage(configuration, baseItemNumsArray, variousItemsPendingToAdd, variousImtesNum);
 
-        return new Page(result.inventory, result.itemNums, baseItemNumsArray);
+        return new Page(result.inventory, result.itemNums);
     }
 
     public BuildItemNumsReult createItemNumsArrayForPage(MenuConfiguration configuration, int[][] baseItemNumsArray,

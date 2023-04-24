@@ -22,7 +22,8 @@ public final class OnConfirmationMenuClicked implements OnMenuClicked {
     }
 
     private boolean hasClickedConfirmationItems(Menu menu, int itemNumClicked){
-        return menu.getConfiguration().isConfirmation() && (menu.getConfiguration().getConfirmationConfiguration().getCancel().getItemNum() == itemNumClicked ||
+        return menu.getConfiguration().isConfirmation() &&  (
+                menu.getConfiguration().getConfirmationConfiguration().getCancel().getItemNum() == itemNumClicked ||
                 menu.getConfiguration().getConfirmationConfiguration().getAccept().getItemNum() == itemNumClicked);
     }
 }

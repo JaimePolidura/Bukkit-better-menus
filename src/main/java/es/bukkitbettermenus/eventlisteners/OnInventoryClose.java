@@ -21,7 +21,7 @@ public class OnInventoryClose implements Listener {
     public void onInventoryClose(InventoryCloseEvent event){
         this.openMenuRepository.findByPlayerName(event.getPlayer().getName()).ifPresent(menu -> {
             BetterMenusInstanceProvider.THREAD_POOL.execute(() -> {
-                this.executeRegisteredMenuEventListener(event, menu);
+                this.executeOnCloseEventListener(event, menu);
 
                 this.openMenuRepository.deleteByPlayerName(event.getPlayer().getName(), menu.getClass());
 
@@ -30,7 +30,7 @@ public class OnInventoryClose implements Listener {
         });
     }
 
-    private void executeRegisteredMenuEventListener(InventoryCloseEvent event, Menu menu){
+    private void executeOnCloseEventListener(InventoryCloseEvent event, Menu menu){
         Consumer<InventoryCloseEvent> onCloseEventListener = menu.getConfiguration().getOnCloseEventListener();
 
         if(onCloseEventListener != null)

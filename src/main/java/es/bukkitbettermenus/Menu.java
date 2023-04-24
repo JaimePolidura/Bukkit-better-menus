@@ -7,6 +7,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public abstract class Menu {
@@ -14,10 +16,13 @@ public abstract class Menu {
     @Getter private final UUID menuId;
     @Getter private final int[][] baseItemNums;
     @Getter private int actualPageNumber;
-    private MenuConfiguration configuration;
     @Setter private List<Page> pages;
+    private MenuConfiguration configuration;
+
+    private final Lock interactionLock;
 
     public Menu() {
+        this.interactionLock = new ReentrantLock(true);
         this.baseItemNums = this.items();
         this.actualPageNumber = 0;
         this.pages = new ArrayList<>();
@@ -33,7 +38,7 @@ public abstract class Menu {
     }
 
     public final void deleteItem(int slot, int pageNumber){
-        this.getPage(pageNumber).getInventory().clear(slot);
+        this.getPage(pageNumber).deleteItem(slot);
     }
 
     public final List<Page> allPages() {
@@ -128,5 +133,13 @@ public abstract class Menu {
         Object propertyObject = this.properties.get(key);
 
         return propertyObject == null ? 0 : Double.parseDouble(String.valueOf(propertyObject));
+    }
+
+    public void lockInteractions() {
+        this.interactionLock.lock();
+    }
+
+    public void unlockInteractions() {
+        this.interactionLock.unlock();
     }
 }

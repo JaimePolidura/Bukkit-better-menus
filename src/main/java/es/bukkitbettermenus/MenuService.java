@@ -12,12 +12,14 @@ import java.util.List;
 import static org.bukkit.ChatColor.DARK_RED;
 
 public class MenuService {
-    private final OpenMenuRepository openMenuRepository;
     private final StaticMenuRepository staticMenuRepository;
+    private final MenuBuilderService newMenuBuilderService;
+    private final OpenMenuRepository openMenuRepository;
 
     public MenuService() {
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
         this.staticMenuRepository = BetterMenusInstanceProvider.STATIC_MENUS_REPOSITORY;
+        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
+        this.newMenuBuilderService = new MenuBuilderService();
     }
 
     public void open(Player player, Menu menu){
@@ -45,13 +47,12 @@ public class MenuService {
 
     public List<Page> buildPages(Menu menu){
         return menu.getConfiguration().isStaticMenu() ?
-                this.staticMenuRepository.findByMenuClass(menu.getClass()).orElse(buildMenuPages(menu)) :
+                this.staticMenuRepository.findByMenuClass(menu.getClass())
+                        .orElse(buildMenuPages(menu)) :
                 buildMenuPages(menu);
     }
 
     private List<Page> buildMenuPages(Menu menu) {
-        MenuBuilderService newMenuBuilderService = new MenuBuilderService();
-
         return newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums());
     }
 
