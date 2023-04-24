@@ -19,8 +19,6 @@ public abstract class Menu {
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
 
-    private final Lock interactionLock;
-
     public Menu() {
         this.interactionLock = new ReentrantLock(true);
         this.baseItemNums = this.items();
@@ -133,13 +131,5 @@ public abstract class Menu {
         Object propertyObject = this.properties.get(key);
 
         return propertyObject == null ? 0 : Double.parseDouble(String.valueOf(propertyObject));
-    }
-
-    public void lockInteractions() {
-        this.interactionLock.lock();
-    }
-
-    public void unlockInteractions() {
-        this.interactionLock.unlock();
     }
 }

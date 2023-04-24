@@ -4,20 +4,26 @@ import es.bukkitbettermenus.Menu;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class OpenMenuRepository {
-    private final Map<String, Menu> menusByPlayerName;
+    private final Map<Class<? extends Menu>, ReadWriteLock> interationLockByType;
+
     private final Map<Class<? extends Menu>, List<Menu>> menusByType;
+    private final Map<String, Menu> menusByPlayerName;
 
     public OpenMenuRepository() {
+        this.interationLockByType = new ConcurrentHashMap<>();
         this.menusByPlayerName = new ConcurrentHashMap<>();
         this.menusByType = new ConcurrentHashMap<>();
     }
 
     public void save(String jugador, Menu menu){
-        this.menusByPlayerName.put(jugador, menu);
+        this.interationLockByType.putIfAbsent(menu.getClass(), new ReentrantReadWriteLock());
         this.menusByType.putIfAbsent(menu.getClass(), new LinkedList<>());
         this.menusByType.get(menu.getClass()).add(menu);
+        this.menusByPlayerName.put(jugador, menu);
     }
 
     public Optional<Menu> findByPlayerName(String playerName){
@@ -28,6 +34,26 @@ public class OpenMenuRepository {
         List<Menu> menus = this.menusByType.get(menuType);
 
         return menus == null ? Collections.EMPTY_LIST : menus;
+    }
+
+    public void startInteracting(Class<? extends Menu> menuType) {
+        ReadWriteLock lock = this.interationLockByType.get(menuType);
+        lock.readLock().lock();
+    }
+
+    public void stopInteracting(Class<? extends Menu> menuType) {
+        ReadWriteLock lock = this.interationLockByType.get(menuType);
+        lock.readLock().unlock();
+    }
+
+    public void lockInteractionsByType(Class<? extends Menu> menuType) {
+        ReadWriteLock lock = this.interationLockByType.get(menuType);
+        lock.writeLock().lock();
+    }
+
+    public void unlockInteractionsByType(Class<? extends Menu> menuType) {
+        ReadWriteLock lock = this.interationLockByType.get(menuType);
+        lock.writeLock().unlock();
     }
 
     public void deleteByPlayerName(String playerName, Class<? extends Menu> menuType){

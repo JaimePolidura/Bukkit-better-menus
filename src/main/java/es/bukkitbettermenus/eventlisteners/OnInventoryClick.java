@@ -60,22 +60,23 @@ public class OnInventoryClick implements Listener {
     }
 
     private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int row, int column, int itemNumClicked) {
-        BiConsumer<Player, InventoryClickEvent> onClick = menu.getConfiguration().getOnClickEventListeners()
-                .get(itemNumClicked);
-
-        if (onClick != null){
-            tryToExecuteOnClick(event, onClick);
-        }
-
-        OnMenuModulesClickedListeners.notify((Player) event.getWhoClicked(), menu, itemNumClicked);
-    }
-
-    private void tryToExecuteOnClick(InventoryClickEvent event, BiConsumer<Player, InventoryClickEvent> eventConsumer) {
         try{
-            eventConsumer.accept((Player) event.getWhoClicked(), event);
+            this.openMenuRepository.startInteracting(menu.getClass());
+
+            BiConsumer<Player, InventoryClickEvent> onClick = menu.getConfiguration().getOnClickEventListeners()
+                    .get(itemNumClicked);
+
+            if (onClick != null){
+                onClick.accept((Player) event.getWhoClicked(), event);
+            }
+
+            OnMenuModulesClickedListeners.notify((Player) event.getWhoClicked(), menu, itemNumClicked);
         }catch (Exception e) {
             event.getWhoClicked().sendMessage(DARK_RED + e.getMessage());
             this.menuService.close((Player) event.getWhoClicked());
+        }finally {
+            this.openMenuRepository.stopInteracting(menu.getClass());
+
         }
     }
 }
