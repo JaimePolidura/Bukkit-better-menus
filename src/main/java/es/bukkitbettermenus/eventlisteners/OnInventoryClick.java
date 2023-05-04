@@ -76,7 +76,6 @@ public class OnInventoryClick implements Listener {
             this.menuService.close((Player) event.getWhoClicked());
         }finally {
             this.openMenuRepository.stopInteracting(menu.getClass());
-
         }
     }
 }
