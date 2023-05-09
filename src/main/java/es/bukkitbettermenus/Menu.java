@@ -7,8 +7,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public abstract class Menu {
@@ -20,7 +18,6 @@ public abstract class Menu {
     private MenuConfiguration configuration;
 
     public Menu() {
-        this.interactionLock = new ReentrantLock(true);
         this.baseItemNums = this.items();
         this.actualPageNumber = 0;
         this.pages = new ArrayList<>();
