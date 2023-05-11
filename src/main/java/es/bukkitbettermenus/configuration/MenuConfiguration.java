@@ -72,7 +72,6 @@ public class MenuConfiguration {
         private Map<Integer, Function<Player, ItemStack>> itemFunctions;
         private Map<Integer, List<ItemStack>> items;
         private Map<Integer, Function<Player, List<ItemStack>>> itemsFunctions;
-
         private Map<Integer, BiConsumer<Player, InventoryClickEvent>> onClickEventListeners;
         private Consumer<InventoryCloseEvent> onCloseEventListener;
         private PaginationConfiguration menuPaginationConfiguration;
@@ -220,6 +219,11 @@ public class MenuConfiguration {
 
         public MenuConfigurationBuilder items(int itemNum, List<ItemStack> items){
             this.items.put(itemNum, items);
+            return this;
+        }
+
+        public MenuConfigurationBuilder items(int itemNum, Function<Player,List<ItemStack>> itemsFunction){
+            this.itemsFunctions.put(itemNum, itemsFunction);
             return this;
         }
 
