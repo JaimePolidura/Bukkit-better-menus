@@ -4,6 +4,7 @@ import es.bukkitbettermenus.BetterMenusInstanceProvider;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.menustate.AfterClose;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -25,7 +26,7 @@ public class OnInventoryClose implements Listener {
 
                 this.openMenuRepository.deleteByPlayerName(event.getPlayer().getName(), menu.getClass());
 
-                if(menu instanceof AfterClose) ((AfterClose) menu).afterClose();
+                if(menu instanceof AfterClose) ((AfterClose) menu).afterClose((Player) event.getPlayer());
             });
         });
     }

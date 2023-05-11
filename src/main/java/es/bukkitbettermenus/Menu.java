@@ -9,13 +9,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class Menu {
+public abstract class Menu<T> {
     @Getter private final Map<String, Object> properties;
     @Getter private final UUID menuId;
     @Getter private final int[][] baseItemNums;
     @Getter private int actualPageNumber;
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
+    @Getter @Setter private T state;
 
     public Menu() {
         this.baseItemNums = this.items();
@@ -109,7 +110,7 @@ public abstract class Menu {
         return this.pages.get(this.actualPageNumber);
     }
 
-    public final Menu setProperty(String key, Object value) {
+    public final Menu<T> setProperty(String key, Object value) {
         if (this.properties.isEmpty()) this.properties.putAll(this.getConfiguration().getProperties());
 
         this.properties.put(key, value);

@@ -51,15 +51,13 @@ public class OnInventoryClick implements Listener {
         boolean inventorTypePlayer = event.getCurrentItem() == null || inventoryType == InventoryType.PLAYER;
 
         if (!inventorTypePlayer){
-            int row = SupportedInventoryType.getRowBySlot(event.getSlot(), inventoryType);
-            int column = SupportedInventoryType.getColumnBySlot(event.getSlot(), inventoryType);
             int itemNumClicked = menu.getActualPage().getItemNumBySlot(event.getSlot());
 
-            performOnClickInMenu(event, menu, row, column, itemNumClicked);
+            performOnClickInMenu(event, menu, itemNumClicked);
         }
     }
 
-    private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int row, int column, int itemNumClicked) {
+    private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int itemNumClicked) {
         try{
             this.openMenuRepository.startInteracting(menu.getClass());
 

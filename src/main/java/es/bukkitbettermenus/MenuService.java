@@ -25,16 +25,26 @@ public class MenuService {
         this.newMenuBuilderService = new MenuBuilderService();
     }
 
-    public void open(Player player, Class<? extends Menu> menuClass) {
+    public <T> void open(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         try {
-            Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+            Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
+            menu.setState(initialState);
             this.open(player, menu);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void open(Player player, Menu menu){
+    public void open(Player player, Class<? extends Menu<?>> menuClass) {
+        try {
+            Menu<?> menu = this.menuConstructorResolver.getMenu(menuClass);
+            this.open(player, menu);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void open(Player player, Menu<?> menu){
         try {
             tryToOpenMenu(player, menu);
         }catch (Exception e) {
@@ -43,8 +53,8 @@ public class MenuService {
         }
     }
 
-    private void tryToOpenMenu(Player player, Menu menu) {
-        callBeforeShow(menu);
+    private void tryToOpenMenu(Player player, Menu<?> menu) {
+        callBeforeShow(menu, player);
 
         menu.addPages(buildPages(menu, player));
 
@@ -54,26 +64,26 @@ public class MenuService {
 
         if(menu.getConfiguration().isStaticMenu()) this.staticMenuRepository.save(menu);
 
-        callAfterShow(menu);
+        callAfterShow(menu, player);
     }
 
-    public List<Page> buildPages(Menu menu, Player player){
+    public List<Page> buildPages(Menu<?> menu, Player player){
         return menu.getConfiguration().isStaticMenu() ?
                 this.staticMenuRepository.findByMenuClass(menu.getClass())
                         .orElse(buildMenuPages(menu, player)) :
                 buildMenuPages(menu, player);
     }
 
-    private List<Page> buildMenuPages(Menu menu, Player player) {
+    private List<Page> buildMenuPages(Menu<?> menu, Player player) {
         return newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
     }
 
-    private void callAfterShow(Menu menu) {
-        if(menu instanceof AfterShow) ((AfterShow) menu).afterShow();
+    private void callAfterShow(Menu<?> menu, Player player) {
+        if(menu instanceof AfterShow) ((AfterShow) menu).afterShow(player);
     }
 
-    private void callBeforeShow(Menu menu) {
-        if(menu instanceof BeforeShow) ((BeforeShow) menu).beforeShow();
+    private void callBeforeShow(Menu<?> menu, Player player) {
+        if(menu instanceof BeforeShow) ((BeforeShow) menu).beforeShow(player);
     }
 
     public void close(Player player){

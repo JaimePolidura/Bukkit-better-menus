@@ -1,5 +1,7 @@
 package es.bukkitbettermenus.menustate;
 
+import org.bukkit.entity.Player;
+
 public interface AfterClose {
-    void afterClose();
+    void afterClose(Player player);
 }
