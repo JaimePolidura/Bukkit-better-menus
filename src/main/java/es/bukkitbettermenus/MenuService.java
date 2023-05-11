@@ -7,19 +7,31 @@ import es.bukkitbettermenus.repository.OpenMenuRepository;
 import es.bukkitbettermenus.repository.StaticMenuRepository;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static org.bukkit.ChatColor.DARK_RED;
 
 public class MenuService {
+    private final MenuConstructorResolver menuConstructorResolver;
     private final StaticMenuRepository staticMenuRepository;
     private final MenuBuilderService newMenuBuilderService;
     private final OpenMenuRepository openMenuRepository;
 
     public MenuService() {
+        this.menuConstructorResolver = new MenuConstructorResolver();
         this.staticMenuRepository = BetterMenusInstanceProvider.STATIC_MENUS_REPOSITORY;
         this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
         this.newMenuBuilderService = new MenuBuilderService();
+    }
+
+    public void open(Player player, Class<? extends Menu> menuClass) {
+        try {
+            Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+            this.open(player, menu);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void open(Player player, Menu menu){
@@ -34,7 +46,7 @@ public class MenuService {
     private void tryToOpenMenu(Player player, Menu menu) {
         callBeforeShow(menu);
 
-        menu.addPages(buildPages(menu));
+        menu.addPages(buildPages(menu, player));
 
         player.openInventory(menu.getInventory());
 
@@ -45,15 +57,15 @@ public class MenuService {
         callAfterShow(menu);
     }
 
-    public List<Page> buildPages(Menu menu){
+    public List<Page> buildPages(Menu menu, Player player){
         return menu.getConfiguration().isStaticMenu() ?
                 this.staticMenuRepository.findByMenuClass(menu.getClass())
-                        .orElse(buildMenuPages(menu)) :
-                buildMenuPages(menu);
+                        .orElse(buildMenuPages(menu, player)) :
+                buildMenuPages(menu, player);
     }
 
-    private List<Page> buildMenuPages(Menu menu) {
-        return newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums());
+    private List<Page> buildMenuPages(Menu menu, Player player) {
+        return newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
     }
 
     private void callAfterShow(Menu menu) {

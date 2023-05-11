@@ -8,17 +8,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public final class MenuBuilderService {
-    public List<Page> createPages(MenuConfiguration configuration, int[][] baseItemNums){
+    public List<Page> createPages(MenuConfiguration configuration, int[][] baseItemNums, Player player){
         List<Page> pages = new LinkedList<>();
+
+        this.addToItemMapsItemsFunctions(configuration, player);
 
         Queue<ItemStack> variousItemsItemStack = this.findVariousItems(configuration);
         int variousItemStack = this.findVariousItemsItemNum(configuration);
@@ -31,6 +31,13 @@ public final class MenuBuilderService {
         }
 
         return pages;
+    }
+
+    private void addToItemMapsItemsFunctions(MenuConfiguration configuration, Player player) {
+        configuration.getItemsFunctions().forEach((itemNum, itemFunction) -> {
+            ItemStack itemStack = itemFunction.apply(player);
+            configuration.getItems().put(itemNum, Collections.singletonList(itemStack));
+        });
     }
 
     private Queue<ItemStack> findVariousItems(MenuConfiguration configuration) {
@@ -47,14 +54,6 @@ public final class MenuBuilderService {
                 return entry.getKey();
 
         return -1;
-    }
-
-    public Page createPage(MenuConfiguration configuration, int[][] baseItemNumsArray, Queue<ItemStack> variousItemsPendingToAdd,
-                           int variousImtesNum){
-
-        BuildItemNumsReult result = this.createItemNumsArrayForPage(configuration, baseItemNumsArray, variousItemsPendingToAdd, variousImtesNum);
-
-        return new Page(result.inventory, result.itemNums);
     }
 
     public BuildItemNumsReult createItemNumsArrayForPage(MenuConfiguration configuration, int[][] baseItemNumsArray,

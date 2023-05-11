@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @AllArgsConstructor
 public class MenuConfiguration {
+    @Getter private final Map<Integer, Function<Player, ItemStack>> itemsFunctions;
     @Getter private final Map<Integer, List<ItemStack>> items;
     @Getter private final Map<Integer, BiConsumer<Player, InventoryClickEvent>> onClickEventListeners;
     @Getter private final Consumer<InventoryCloseEvent> onCloseEventListener;
@@ -66,6 +68,7 @@ public class MenuConfiguration {
     }
 
     public static class MenuConfigurationBuilder{
+        private Map<Integer, Function<Player, ItemStack>> itemsFunctions;
         private Map<Integer, List<ItemStack>> items;
         private Map<Integer, BiConsumer<Player, InventoryClickEvent>> onClickEventListeners;
         private Consumer<InventoryCloseEvent> onCloseEventListener;
@@ -81,6 +84,7 @@ public class MenuConfiguration {
         private SyncMenuConfiguration syncMenuConfiguration;
 
         public MenuConfigurationBuilder(){
+            this.itemsFunctions = new HashMap<>();
             this.items = new HashMap<>();
             this.onClickEventListeners = new HashMap<>();
             this.breakpointItemNum = -1;
@@ -88,7 +92,7 @@ public class MenuConfiguration {
         }
 
         public MenuConfiguration build(){
-            return new MenuConfiguration(items, onClickEventListeners, onCloseEventListener,
+            return new MenuConfiguration(itemsFunctions, items, onClickEventListeners, onCloseEventListener,
                     title, fixedItems, breakpointItemNum, menuPaginationConfiguration, confirmationConfiguration,
                     staticMenu, messagingConfiguration, numberSelectorMenuConfiguration, properties,
                     syncMenuConfiguration);
@@ -166,6 +170,11 @@ public class MenuConfiguration {
 
         public MenuConfigurationBuilder item(int itemNum, ItemStack item){
             this.items.put(itemNum, Collections.singletonList(item));
+            return this;
+        }
+
+        public MenuConfigurationBuilder item(int itemNum, Function<Player, ItemStack> itemFunction){
+            this.itemsFunctions.put(itemNum, itemFunction);
             return this;
         }
 
