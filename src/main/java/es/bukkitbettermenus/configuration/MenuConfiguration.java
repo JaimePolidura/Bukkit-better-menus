@@ -24,8 +24,9 @@ import java.util.function.Function;
 
 @AllArgsConstructor
 public class MenuConfiguration {
-    @Getter private final Map<Integer, Function<Player, ItemStack>> itemsFunctions;
+    @Getter private final Map<Integer, Function<Player, ItemStack>> itemFunctions;
     @Getter private final Map<Integer, List<ItemStack>> items;
+    @Getter private final Map<Integer, Function<Player, List<ItemStack>>> itemsFunctions;
     @Getter private final Map<Integer, BiConsumer<Player, InventoryClickEvent>> onClickEventListeners;
     @Getter private final Consumer<InventoryCloseEvent> onCloseEventListener;
     @Getter private final String title;
@@ -68,8 +69,10 @@ public class MenuConfiguration {
     }
 
     public static class MenuConfigurationBuilder{
-        private Map<Integer, Function<Player, ItemStack>> itemsFunctions;
+        private Map<Integer, Function<Player, ItemStack>> itemFunctions;
         private Map<Integer, List<ItemStack>> items;
+        private Map<Integer, Function<Player, List<ItemStack>>> itemsFunctions;
+
         private Map<Integer, BiConsumer<Player, InventoryClickEvent>> onClickEventListeners;
         private Consumer<InventoryCloseEvent> onCloseEventListener;
         private PaginationConfiguration menuPaginationConfiguration;
@@ -84,15 +87,17 @@ public class MenuConfiguration {
         private SyncMenuConfiguration syncMenuConfiguration;
 
         public MenuConfigurationBuilder(){
-            this.itemsFunctions = new HashMap<>();
+            this.itemFunctions = new HashMap<>();
             this.items = new HashMap<>();
             this.onClickEventListeners = new HashMap<>();
             this.breakpointItemNum = -1;
             this.properties = new HashMap<>();
+            this.itemsFunctions = new HashMap<>();
+            this.fixedItems = true;
         }
 
         public MenuConfiguration build(){
-            return new MenuConfiguration(itemsFunctions, items, onClickEventListeners, onCloseEventListener,
+            return new MenuConfiguration(itemFunctions, items, itemsFunctions, onClickEventListeners, onCloseEventListener,
                     title, fixedItems, breakpointItemNum, menuPaginationConfiguration, confirmationConfiguration,
                     staticMenu, messagingConfiguration, numberSelectorMenuConfiguration, properties,
                     syncMenuConfiguration);
@@ -121,6 +126,11 @@ public class MenuConfiguration {
                 this.items.put(entry.getKey(), Collections.singletonList(entry.getValue().getItemStack()));
             }
 
+            return this;
+        }
+
+        public MenuConfigurationBuilder noFixedItems(){
+            this.fixedItems = false;
             return this;
         }
 
@@ -174,7 +184,7 @@ public class MenuConfiguration {
         }
 
         public MenuConfigurationBuilder item(int itemNum, Function<Player, ItemStack> itemFunction){
-            this.itemsFunctions.put(itemNum, itemFunction);
+            this.itemFunctions.put(itemNum, itemFunction);
             return this;
         }
 

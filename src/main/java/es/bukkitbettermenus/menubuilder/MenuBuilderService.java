@@ -34,9 +34,13 @@ public final class MenuBuilderService {
     }
 
     private void addToItemMapsItemsFunctions(MenuConfiguration configuration, Player player) {
-        configuration.getItemsFunctions().forEach((itemNum, itemFunction) -> {
+        configuration.getItemFunctions().forEach((itemNum, itemFunction) -> {
             ItemStack itemStack = itemFunction.apply(player);
             configuration.getItems().put(itemNum, Collections.singletonList(itemStack));
+        });
+        configuration.getItemsFunctions().forEach((itemNum, itemsFunction) -> {
+            List<ItemStack> items = itemsFunction.apply(player);
+            configuration.getItems().put(itemNum, items);
         });
     }
 
