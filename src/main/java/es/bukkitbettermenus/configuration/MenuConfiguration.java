@@ -227,6 +227,13 @@ public class MenuConfiguration {
             return this;
         }
 
+        public MenuConfigurationBuilder items(int itemNum, Function<Player,List<ItemStack>> itemsFunction, BiConsumer<Player, InventoryClickEvent> onClick){
+            this.onClickEventListeners.put(itemNum, onClick);
+            this.itemsFunctions.put(itemNum, itemsFunction);
+            return this;
+        }
+
+
         public MenuConfigurationBuilder items(int itemNum, List<ItemStack> items, BiConsumer<Player, InventoryClickEvent> onClick){
             this.items.put(itemNum, items);
             this.onClickEventListeners.put(itemNum, onClick);
