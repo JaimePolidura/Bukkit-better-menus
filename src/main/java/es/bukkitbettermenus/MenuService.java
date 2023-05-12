@@ -7,7 +7,6 @@ import es.bukkitbettermenus.repository.OpenMenuRepository;
 import es.bukkitbettermenus.repository.StaticMenuRepository;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static org.bukkit.ChatColor.DARK_RED;
@@ -25,23 +24,19 @@ public class MenuService {
         this.newMenuBuilderService = new MenuBuilderService();
     }
 
-    public <T> void open(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
-        try {
-            Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
-            menu.setState(initialState);
-            this.open(player, menu);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public <T> Menu<T> open(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
+        Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
+        menu.setState(initialState);
+        this.open(player, menu);
+
+        return menu;
     }
 
-    public void open(Player player, Class<? extends Menu<?>> menuClass) {
-        try {
-            Menu<?> menu = this.menuConstructorResolver.getMenu(menuClass);
-            this.open(player, menu);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public Menu open(Player player, Class<? extends Menu> menuClass) {
+        Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+        this.open(player, menu);
+
+        return menu;
     }
 
     public void open(Player player, Menu<?> menu){
@@ -65,6 +60,12 @@ public class MenuService {
         if(menu.getConfiguration().isStaticMenu()) this.staticMenuRepository.save(menu);
 
         callAfterShow(menu, player);
+    }
+
+    public List<Page> buildPages(Player player, Class<? extends Menu> menuClass) {
+        Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+
+        return menu.getPages();
     }
 
     public List<Page> buildPages(Menu<?> menu, Player player){

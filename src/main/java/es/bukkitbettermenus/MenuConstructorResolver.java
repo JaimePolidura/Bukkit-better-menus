@@ -1,10 +1,11 @@
 package es.bukkitbettermenus;
 
+import io.vavr.control.Try;
+
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 public final class MenuConstructorResolver {
-    public Menu getMenu(Class<? extends Menu> menuClass) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Menu getMenu(Class<? extends Menu> menuClass) {
         MenusDependenciesInstanceProvider instanceProvider = BetterMenusInstanceProvider.INSTANCE_PROVIDER;
         if(instanceProvider == null){
             throw new RuntimeException("Instance provider not provided");
@@ -27,6 +28,6 @@ public final class MenuConstructorResolver {
             resolvedConstructorParameters[i] = instance;
         }
 
-        return constructor.newInstance(resolvedConstructorParameters);
+        return Try.of(() -> constructor.newInstance(resolvedConstructorParameters)).get();
     }
 }

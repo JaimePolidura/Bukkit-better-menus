@@ -28,7 +28,7 @@ public final class SyncMenuService {
                 .filter(menu -> menu.getConfiguration().isSync())
                 .parallel()
                 .forEach(menuToSync -> menuToSync.setPages(mapPages(
-                        menuToSync.allPages(),
+                        menuToSync.getPages(),
                         newPages,
                         menuToSync.getConfiguration().getSyncMenuConfiguration()
                 )));
@@ -43,8 +43,8 @@ public final class SyncMenuService {
                 .filter(menu -> !menu.getMenuId().equals(originalMenu.getMenuId()) && menu.getConfiguration().isSync())
                 .parallel()
                 .forEach(menu -> menu.setPages(mapPages(
-                        menu.allPages(),
-                        originalMenu.allPages(),
+                        menu.getPages(),
+                        originalMenu.getPages(),
                         menu.configuration().getSyncMenuConfiguration()
                 )));
 

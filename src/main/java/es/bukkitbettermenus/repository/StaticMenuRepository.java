@@ -16,7 +16,7 @@ public final class StaticMenuRepository {
     }
 
     public void save(Menu menu){
-        this.menus.put(menu.getClass(), menu.allPages());
+        this.menus.put(menu.getClass(), menu.getPages());
     }
 
     public Optional<List<Page>> findByMenuClass(Class<? extends Menu> menuClass){

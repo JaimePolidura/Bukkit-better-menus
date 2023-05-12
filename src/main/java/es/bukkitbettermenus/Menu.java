@@ -37,7 +37,7 @@ public abstract class Menu<T> {
         this.getPage(pageNumber).deleteItem(slot);
     }
 
-    public final List<Page> allPages() {
+    public final List<Page> getPages() {
         return new ArrayList<>(this.pages);
     }
 
@@ -82,7 +82,7 @@ public abstract class Menu<T> {
     }
 
     public final List<ItemStack> getItemsByItemNum(int itemNum) {
-        return this.allPages().stream()
+        return this.getPages().stream()
                 .map(page -> page.getItemsByItemNum(itemNum))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
