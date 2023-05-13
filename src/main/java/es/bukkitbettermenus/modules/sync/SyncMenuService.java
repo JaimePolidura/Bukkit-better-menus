@@ -20,7 +20,7 @@ public final class SyncMenuService {
     public SyncMenuService() {
         this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
     }
-
+    
     public void sync(Class<? extends Menu> menuType, List<Page> newPages, SyncMenuConfiguration syncConfiguration){
         adquiredLocksIfNeccesary(menuType, syncConfiguration);
 

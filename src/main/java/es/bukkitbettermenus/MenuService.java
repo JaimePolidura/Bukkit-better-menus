@@ -51,7 +51,7 @@ public class MenuService {
     private void tryToOpenMenu(Player player, Menu<?> menu) {
         callBeforeShow(menu, player);
 
-        menu.addPages(buildPages(menu, player));
+        menu.addPages(buildPages(player, menu));
 
         player.openInventory(menu.getInventory());
 
@@ -65,17 +65,17 @@ public class MenuService {
     public List<Page> buildPages(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
 
-        return menu.getPages();
+        return buildPages(player, menu);
     }
 
-    public List<Page> buildPages(Menu<?> menu, Player player){
+    public List<Page> buildPages(Player player, Menu<?> menu){
         return menu.getConfiguration().isStaticMenu() ?
                 this.staticMenuRepository.findByMenuClass(menu.getClass())
-                        .orElse(buildMenuPages(menu, player)) :
-                buildMenuPages(menu, player);
+                        .orElse(buildMenuPages(player, menu)) :
+                buildMenuPages(player,menu);
     }
 
-    private List<Page> buildMenuPages(Menu<?> menu, Player player) {
+    private List<Page> buildMenuPages(Player player, Menu<?> menu) {
         return newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
     }
 
