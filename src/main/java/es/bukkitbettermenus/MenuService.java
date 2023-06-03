@@ -62,11 +62,18 @@ public class MenuService {
         callAfterShow(menu, player);
     }
 
-    public Menu<?> buildMenu(Player player, Class<? extends Menu<?>> menuClass) {
+    public Menu<?> buildMenu(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.addPages(buildPages(player, menuClass));
 
         return menu;
+    }
+
+    public <T> List<Page> buildPages(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
+        Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+        menu.setState(initialState);
+
+        return buildPages(player, menu);
     }
 
     public List<Page> buildPages(Player player, Class<? extends Menu> menuClass) {

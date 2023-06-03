@@ -187,17 +187,15 @@ public class MenuConfiguration {
             return this;
         }
 
-        public MenuConfigurationBuilder item(int itemNum, ItemStack item, BiConsumer<Player, InventoryClickEvent> onClick){
-            this.items.put(itemNum, Collections.singletonList(item));
+        public MenuConfigurationBuilder item(int itemNum, Function<Player, ItemStack> itemFunction, BiConsumer<Player, InventoryClickEvent> onClick){
+            this.itemFunctions.put(itemNum, itemFunction);
             this.onClickEventListeners.put(itemNum, onClick);
             return this;
         }
 
-        public MenuConfigurationBuilder basicItemsMap(Map<Integer, Material> items){
-            items.forEach((itemNum, itemMaterial) -> {
-                this.items.put(itemNum, Collections.singletonList(new ItemStack(itemMaterial)));
-            });
-
+        public MenuConfigurationBuilder item(int itemNum, ItemStack item, BiConsumer<Player, InventoryClickEvent> onClick){
+            this.items.put(itemNum, Collections.singletonList(item));
+            this.onClickEventListeners.put(itemNum, onClick);
             return this;
         }
 
@@ -209,6 +207,14 @@ public class MenuConfiguration {
         public MenuConfigurationBuilder item(int itemNum, Material itemMaterial, BiConsumer<Player, InventoryClickEvent> onClick){
             this.items.put(itemNum, Collections.singletonList(new ItemStack(itemMaterial)));
             this.onClickEventListeners.put(itemNum, onClick);
+            return this;
+        }
+
+        public MenuConfigurationBuilder basicItemsMap(Map<Integer, Material> items){
+            items.forEach((itemNum, itemMaterial) -> {
+                this.items.put(itemNum, Collections.singletonList(new ItemStack(itemMaterial)));
+            });
+
             return this;
         }
 
