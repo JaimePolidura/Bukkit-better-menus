@@ -27,6 +27,7 @@ public class MenuService {
     public <T> Menu<T> open(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setState(initialState);
+        menu.setPlayer(player);
         this.open(player, menu);
 
         return menu;
@@ -34,6 +35,7 @@ public class MenuService {
 
     public Menu open(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+        menu.setPlayer(player);
         this.open(player, menu);
 
         return menu;
@@ -64,6 +66,7 @@ public class MenuService {
 
     public Menu<?> buildMenu(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+        menu.setPlayer(player);
         menu.addPages(buildPages(player, menuClass));
 
         return menu;
@@ -71,14 +74,16 @@ public class MenuService {
 
     public <T> Menu<T> buildMenu(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
-        menu.setState(initialState);
         menu.addPages(buildPages(player, menuClass));
+        menu.setState(initialState);
+        menu.setPlayer(player);
 
         return menu;
     }
 
     public <T> List<Page> buildPages(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+        menu.setPlayer(player);
         menu.setState(initialState);
 
         return buildPages(player, menu);

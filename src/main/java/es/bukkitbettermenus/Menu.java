@@ -3,6 +3,7 @@ package es.bukkitbettermenus;
 import es.bukkitbettermenus.configuration.MenuConfiguration;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +17,9 @@ public abstract class Menu<T> {
     @Getter private int actualPageNumber;
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
+
     @Getter @Setter private T state;
+    @Getter @Setter private Player player;
 
     public Menu() {
         this.baseItemNums = this.items();
