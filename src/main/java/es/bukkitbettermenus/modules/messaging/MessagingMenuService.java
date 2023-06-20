@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.modules.messaging;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
 
@@ -10,7 +10,7 @@ public final class MessagingMenuService {
     private final OpenMenuRepository openMenuRepository;
 
     public MessagingMenuService() {
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
+        this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
     }
 
     public <T> void broadCastMessage(Menu originalMenu, T message){

@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.modules.pagination;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.OnMenuClicked;
 import org.bukkit.entity.Player;
@@ -9,7 +9,7 @@ public final class OnPaginationMenuClicked implements OnMenuClicked {
     private final PaginationService paginationService;
 
     public OnPaginationMenuClicked() {
-        this.paginationService = BetterMenusInstanceProvider.PAGINATION_SERVICE;
+        this.paginationService = BukkitBetterMenus.PAGINATION_SERVICE;
     }
 
     @Override

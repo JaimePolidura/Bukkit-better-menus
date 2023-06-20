@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.modules.sync;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.Page;
 import es.bukkitbettermenus.SupportedInventoryType;
@@ -18,7 +18,7 @@ public final class SyncMenuService {
     private final OpenMenuRepository openMenuRepository;
 
     public SyncMenuService() {
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
+        this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
     }
     
     public void sync(Class<? extends Menu> menuType, List<Page> newPages, SyncMenuConfiguration syncConfiguration){

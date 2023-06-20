@@ -6,7 +6,7 @@ import java.lang.reflect.Constructor;
 
 public final class MenuConstructorResolver {
     public Menu getMenu(Class<? extends Menu> menuClass) {
-        MenusDependenciesInstanceProvider instanceProvider = BetterMenusInstanceProvider.INSTANCE_PROVIDER;
+        MenusDependenciesInstanceProvider instanceProvider = BukkitBetterMenus.INSTANCE_PROVIDER;
         if(instanceProvider == null){
             throw new RuntimeException("Instance provider not provided");
         }

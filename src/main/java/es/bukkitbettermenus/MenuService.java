@@ -19,8 +19,8 @@ public class MenuService {
 
     public MenuService() {
         this.menuConstructorResolver = new MenuConstructorResolver();
-        this.staticMenuRepository = BetterMenusInstanceProvider.STATIC_MENUS_REPOSITORY;
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
+        this.staticMenuRepository = BukkitBetterMenus.STATIC_MENUS_REPOSITORY;
+        this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
         this.newMenuBuilderService = new MenuBuilderService();
     }
 

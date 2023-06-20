@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.eventlisteners;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.menustate.AfterClose;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
@@ -15,13 +15,13 @@ public class OnInventoryClose implements Listener {
     private final OpenMenuRepository openMenuRepository;
 
     public OnInventoryClose() {
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
+        this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         this.openMenuRepository.findByPlayerName(event.getPlayer().getName()).ifPresent(menu -> {
-            BetterMenusInstanceProvider.THREAD_POOL.execute(() -> {
+            BukkitBetterMenus.THREAD_POOL.execute(() -> {
                 this.executeOnCloseEventListener(event, menu);
 
                 this.openMenuRepository.deleteByPlayerName(event.getPlayer().getName(), menu.getClass());

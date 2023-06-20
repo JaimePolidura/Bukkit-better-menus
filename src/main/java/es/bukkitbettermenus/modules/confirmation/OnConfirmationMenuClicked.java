@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.modules.confirmation;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.MenuService;
 import es.bukkitbettermenus.OnMenuClicked;
@@ -10,7 +10,7 @@ public final class OnConfirmationMenuClicked implements OnMenuClicked {
     private final MenuService menuService;
 
     public OnConfirmationMenuClicked() {
-        this.menuService = BetterMenusInstanceProvider.MENU_SERVICE;
+        this.menuService = BukkitBetterMenus.MENU_SERVICE;
     }
 
     @Override

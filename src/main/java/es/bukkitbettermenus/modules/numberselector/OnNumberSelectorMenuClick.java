@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.modules.numberselector;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.OnMenuClicked;
 import org.bukkit.entity.Player;
@@ -9,7 +9,7 @@ public final class OnNumberSelectorMenuClick implements OnMenuClicked {
     private final NumberSelectorService numberSelectorService;
 
     public OnNumberSelectorMenuClick() {
-        this.numberSelectorService = BetterMenusInstanceProvider.NUMBER_SELECTOR_SERVICE;
+        this.numberSelectorService = BukkitBetterMenus.NUMBER_SELECTOR_SERVICE;
     }
 
     @Override

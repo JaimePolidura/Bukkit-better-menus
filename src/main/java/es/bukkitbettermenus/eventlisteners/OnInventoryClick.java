@@ -1,9 +1,8 @@
 package es.bukkitbettermenus.eventlisteners;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.MenuService;
-import es.bukkitbettermenus.SupportedInventoryType;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,8 +19,8 @@ public class OnInventoryClick implements Listener {
     private final MenuService menuService;
 
     public OnInventoryClick() {
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
-        this.menuService = BetterMenusInstanceProvider.MENU_SERVICE;
+        this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
+        this.menuService = BukkitBetterMenus.MENU_SERVICE;
     }
 
     @EventHandler
@@ -32,10 +31,7 @@ public class OnInventoryClick implements Listener {
 
         this.openMenuRepository.findByPlayerName(playerName).ifPresent(menu -> {
             try{
-                BetterMenusInstanceProvider.THREAD_POOL.execute(() -> {
-                    tryPerformClickOnMenu(event, menu);
-                });
-
+                tryPerformClickOnMenu(event, menu);
             }catch (Exception e) {
                 event.getWhoClicked().sendMessage(DARK_RED + "Some error happened " + e.getMessage());
                 e.printStackTrace();
@@ -64,6 +60,7 @@ public class OnInventoryClick implements Listener {
             BiConsumer<Player, InventoryClickEvent> onClick = menu.getConfiguration().getOnClickEventListeners()
                     .get(itemNumClicked);
 
+            //TODO Use thread pool?
             if (onClick != null){
                 onClick.accept((Player) event.getWhoClicked(), event);
             }

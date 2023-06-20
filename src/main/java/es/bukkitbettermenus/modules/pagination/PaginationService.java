@@ -1,6 +1,6 @@
 package es.bukkitbettermenus.modules.pagination;
 
-import es.bukkitbettermenus.BetterMenusInstanceProvider;
+import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.Page;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
@@ -10,7 +10,7 @@ public final class PaginationService {
     private final OpenMenuRepository openMenuRepository;
 
     public PaginationService() {
-        this.openMenuRepository = BetterMenusInstanceProvider.OPEN_MENUS_REPOSITORY;
+        this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
     }
 
     public void goForward(Player player, Menu menu) {
