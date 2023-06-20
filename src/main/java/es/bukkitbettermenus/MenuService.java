@@ -28,7 +28,7 @@ public class MenuService {
         Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setState(initialState);
         menu.setPlayer(player);
-        this.open(player, menu);
+        open(player, menu);
 
         return menu;
     }
@@ -36,13 +36,15 @@ public class MenuService {
     public Menu open(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setPlayer(player);
-        this.open(player, menu);
+        open(player, menu);
 
         return menu;
     }
 
     public void open(Player player, Menu<?> menu){
         try {
+            player.closeInventory();
+
             tryToOpenMenu(player, menu);
         }catch (Exception e) {
             player.sendMessage(DARK_RED + "Some error happened " + e.getMessage());
