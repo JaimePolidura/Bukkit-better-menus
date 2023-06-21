@@ -17,7 +17,7 @@ public abstract class Menu<T> {
     @Getter private int actualPageNumber;
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
-
+    
     @Getter @Setter private T state;
     @Getter @Setter private Player player;
 
@@ -31,6 +31,10 @@ public abstract class Menu<T> {
 
     public abstract int[][] items();
     public abstract MenuConfiguration configuration();
+
+    public void close() {
+        player.closeInventory();
+    }
 
     public MenuConfiguration getConfiguration() {
         return this.configuration == null ? this.configuration = configuration() : this.configuration;

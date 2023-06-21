@@ -70,6 +70,7 @@ public class MenuService {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setPlayer(player);
         menu.addPages(buildPages(player, menu));
+        openMenuRepository.save(player.getName(), menu);
 
         return menu;
     }
@@ -79,6 +80,7 @@ public class MenuService {
         menu.addPages(buildPages(player, menu));
         menu.setState(initialState);
         menu.setPlayer(player);
+        openMenuRepository.save(player.getName(), menu);
 
         return menu;
     }
@@ -87,6 +89,7 @@ public class MenuService {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setPlayer(player);
         menu.setState(initialState);
+        openMenuRepository.save(player.getName(), menu);
 
         return buildPages(player, menu);
     }
@@ -94,6 +97,7 @@ public class MenuService {
     public List<Page> buildPages(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setPlayer(player);
+        openMenuRepository.save(player.getName(), menu);
 
         return buildPages(player, menu);
     }

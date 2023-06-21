@@ -20,9 +20,9 @@ public final class SyncMenuService {
     public SyncMenuService() {
         this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
     }
-    
+
     public void sync(Class<? extends Menu> menuType, List<Page> newPages, SyncMenuConfiguration syncConfiguration){
-        adquiredLocksIfNeccesary(menuType, syncConfiguration);
+        dreadlocksIfNecessary(menuType, syncConfiguration);
 
         this.openMenuRepository.findByMenuType(menuType).stream()
                 .filter(menu -> menu.getConfiguration().isSync())
@@ -33,11 +33,11 @@ public final class SyncMenuService {
                         menuToSync.getConfiguration().getSyncMenuConfiguration()
                 )));
 
-        releaseLocksIfNeccesary(menuType, syncConfiguration);
+        releaseLocksIfNecessary(menuType, syncConfiguration);
     }
 
     public void sync(Menu originalMenu){
-        adquiredLocksIfNeccesary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
+        dreadlocksIfNecessary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
 
         this.openMenuRepository.findByMenuType(originalMenu.getClass()).stream()
                 .filter(menu -> !menu.getMenuId().equals(originalMenu.getMenuId()) && menu.getConfiguration().isSync())
@@ -48,15 +48,15 @@ public final class SyncMenuService {
                         menu.configuration().getSyncMenuConfiguration()
                 )));
 
-        adquiredLocksIfNeccesary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
+        dreadlocksIfNecessary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
     }
 
-    private void adquiredLocksIfNeccesary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
+    private void dreadlocksIfNecessary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
         if(syncConfiguration.isLockOnSync())
             this.openMenuRepository.lockInteractionsByType(menuType);
     }
 
-    private void releaseLocksIfNeccesary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
+    private void releaseLocksIfNecessary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
         if(syncConfiguration.isLockOnSync())
             this.openMenuRepository.unlockInteractionsByType(menuType);
     }
