@@ -24,7 +24,6 @@ public final class BukkitBetterMenus {
     public static final PaginationService PAGINATION_SERVICE = new PaginationService();
     public static final MenuBuilderService MENU_BUILDER_SERVICE = new MenuBuilderService();
     public static final SyncMenuService SYNC_MENU_SERVICE = new SyncMenuService();
-    public static final Executor THREAD_POOL = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     public static MenusDependenciesInstanceProvider INSTANCE_PROVIDER = null;
 
     public static void setInstanceProvider(MenusDependenciesInstanceProvider menusDependenciesInstanceProvider) {

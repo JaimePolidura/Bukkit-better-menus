@@ -55,12 +55,9 @@ public class OnInventoryClick implements Listener {
 
     private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int itemNumClicked) {
         try{
-            this.openMenuRepository.startInteracting(menu.getClass());
-
             BiConsumer<Player, InventoryClickEvent> onClick = menu.getConfiguration().getOnClickEventListeners()
                     .get(itemNumClicked);
 
-            //TODO Use thread pool?
             if (onClick != null){
                 onClick.accept((Player) event.getWhoClicked(), event);
             }
@@ -69,8 +66,6 @@ public class OnInventoryClick implements Listener {
         }catch (Exception e) {
             event.getWhoClicked().sendMessage(DARK_RED + e.getMessage());
             this.menuService.close((Player) event.getWhoClicked());
-        }finally {
-            this.openMenuRepository.stopInteracting(menu.getClass());
         }
     }
 }

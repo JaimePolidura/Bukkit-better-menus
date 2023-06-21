@@ -22,8 +22,6 @@ public final class SyncMenuService {
     }
 
     public void sync(Class<? extends Menu> menuType, List<Page> newPages, SyncMenuConfiguration syncConfiguration){
-        dreadlocksIfNecessary(menuType, syncConfiguration);
-
         this.openMenuRepository.findByMenuType(menuType).stream()
                 .filter(menu -> menu.getConfiguration().isSync())
                 .parallel()
@@ -32,13 +30,9 @@ public final class SyncMenuService {
                         newPages,
                         menuToSync.getConfiguration().getSyncMenuConfiguration()
                 )));
-
-        releaseLocksIfNecessary(menuType, syncConfiguration);
     }
 
     public void sync(Menu originalMenu){
-        dreadlocksIfNecessary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
-
         this.openMenuRepository.findByMenuType(originalMenu.getClass()).stream()
                 .filter(menu -> !menu.getMenuId().equals(originalMenu.getMenuId()) && menu.getConfiguration().isSync())
                 .parallel()
@@ -47,18 +41,6 @@ public final class SyncMenuService {
                         originalMenu.getPages(),
                         menu.configuration().getSyncMenuConfiguration()
                 )));
-
-        dreadlocksIfNecessary(originalMenu.getClass(), originalMenu.getConfiguration().getSyncMenuConfiguration());
-    }
-
-    private void dreadlocksIfNecessary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
-        if(syncConfiguration.isLockOnSync())
-            this.openMenuRepository.lockInteractionsByType(menuType);
-    }
-
-    private void releaseLocksIfNecessary(Class<? extends Menu> menuType, SyncMenuConfiguration syncConfiguration) {
-        if(syncConfiguration.isLockOnSync())
-            this.openMenuRepository.unlockInteractionsByType(menuType);
     }
 
     private List<Page> mapPages(List<Page> oldPages, List<Page> newPages, SyncMenuConfiguration syncConfig) {

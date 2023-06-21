@@ -17,7 +17,7 @@ public abstract class Menu<T> {
     @Getter private int actualPageNumber;
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
-    
+
     @Getter @Setter private T state;
     @Getter @Setter private Player player;
 
