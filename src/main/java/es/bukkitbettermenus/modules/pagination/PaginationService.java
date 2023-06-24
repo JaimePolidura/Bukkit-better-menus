@@ -6,6 +6,8 @@ import es.bukkitbettermenus.Page;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
 import org.bukkit.entity.Player;
 
+import java.util.function.Supplier;
+
 public final class PaginationService {
     private final OpenMenuRepository openMenuRepository;
 
@@ -14,15 +16,14 @@ public final class PaginationService {
     }
 
     public void goForward(Player player, Menu menu) {
-        Page page = menu.forward();
+        Page page = menu.nextPage();
         player.openInventory(page.getInventory());
         this.openMenuRepository.save(player.getName(), menu);
     }
 
     public void goBackward(Player player, Menu menu) {
-        Page page = menu.backward();
+        Page page = menu.backPage();
         player.openInventory(page.getInventory());
         this.openMenuRepository.save(player.getName(), menu);
     }
-
 }

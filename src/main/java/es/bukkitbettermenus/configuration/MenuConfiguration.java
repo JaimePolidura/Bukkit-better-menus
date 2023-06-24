@@ -1,5 +1,6 @@
 package es.bukkitbettermenus.configuration;
 
+import es.bukkitbettermenus.Page;
 import es.bukkitbettermenus.modules.confirmation.ConfirmationConfiguration;
 import es.bukkitbettermenus.modules.messaging.MessagingConfiguration;
 import es.bukkitbettermenus.modules.numberselector.NumberSelectorControllItem;
@@ -39,6 +40,7 @@ public class MenuConfiguration {
     @Getter private final NumberSelectorMenuConfiguration numberSelectorMenuConfiguration;
     @Getter private final Map<String, Object> properties;
     @Getter private final SyncMenuConfiguration syncMenuConfiguration;
+    @Getter private final Consumer<Page> onPageChanged;
 
     public static MenuConfigurationBuilder builder(){
         return new MenuConfigurationBuilder();
@@ -84,6 +86,7 @@ public class MenuConfiguration {
         private NumberSelectorMenuConfiguration numberSelectorMenuConfiguration;
         private final Map<String, Object> properties;
         private SyncMenuConfiguration syncMenuConfiguration;
+        private Consumer<Page> onPageChanged;
 
         public MenuConfigurationBuilder(){
             this.itemFunctions = new HashMap<>();
@@ -99,11 +102,16 @@ public class MenuConfiguration {
             return new MenuConfiguration(itemFunctions, items, itemsFunctions, onClickEventListeners, onCloseEventListener,
                     title, fixedItems, breakpointItemNum, menuPaginationConfiguration, confirmationConfiguration,
                     staticMenu, messagingConfiguration, numberSelectorMenuConfiguration, properties,
-                    syncMenuConfiguration);
+                    syncMenuConfiguration, onPageChanged);
         }
 
         public MenuConfigurationBuilder sync(SyncMenuConfiguration configuration){
             this.syncMenuConfiguration = configuration;
+            return this;
+        }
+
+        public MenuConfigurationBuilder onPageChanged(Consumer<Page> onPageChanged) {
+            this.onPageChanged = onPageChanged;
             return this;
         }
 

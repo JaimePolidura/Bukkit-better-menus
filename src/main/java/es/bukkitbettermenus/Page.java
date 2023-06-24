@@ -16,6 +16,7 @@ import java.util.List;
 public final class Page {
     @Getter private final Inventory inventory;
     @Getter private final int[][] itemsNums;
+    @Getter private boolean alreadyVisited;
 
     public void deleteItem(int slot) {
         this.inventory.clear(slot);
@@ -52,7 +53,6 @@ public final class Page {
 
     public List<ItemStack> getItemsByItemNum(int itemNum){
         List<ItemStack> toReturn = new ArrayList<>();
-        int maxRows = this.itemsNums.length;
         int maxCols = this.itemsNums[0].length;
 
         for (int rows = 0; rows < this.itemsNums.length; rows++) {
@@ -65,5 +65,9 @@ public final class Page {
         }
 
         return toReturn;
+    }
+
+    public void setVisited() {
+        this.alreadyVisited = true;
     }
 }

@@ -103,18 +103,32 @@ public abstract class Menu<T> {
         this.pages.get(actualPageNumber).setItemLore(itemSlot, indexItemLore, newLore);
     }
 
-    public final Page forward() {
-        if (this.actualPageNumber + 1 >= this.pages.size()) return this.pages.get(this.pages.size() - 1);
+    public final Page nextPage() {
+        if (actualPageNumber + 1 >= pages.size()) {
+            return pages.get(pages.size() - 1);
+        }
 
         this.actualPageNumber++;
-        return this.pages.get(this.actualPageNumber);
+        Page newPage = this.pages.get(this.actualPageNumber);
+
+        newPage.setVisited();
+        callOnPageChangedCallback(newPage);
+
+        return newPage;
     }
 
-    public final Page backward() {
-        if (this.actualPageNumber == 0) return this.pages.get(0);
+    public final Page backPage() {
+        if (actualPageNumber == 0) {
+            return pages.get(0);
+        }
 
         this.actualPageNumber--;
-        return this.pages.get(this.actualPageNumber);
+        Page newPage = pages.get(actualPageNumber);
+
+        newPage.setVisited();
+        callOnPageChangedCallback(newPage);
+
+        return newPage;
     }
 
     public final Menu<T> setProperty(String key, Object value) {
@@ -136,5 +150,11 @@ public abstract class Menu<T> {
         Object propertyObject = this.properties.get(key);
 
         return propertyObject == null ? 0 : Double.parseDouble(String.valueOf(propertyObject));
+    }
+
+    private void callOnPageChangedCallback(Page newPage) {
+        if(configuration.getOnPageChanged() != null) {
+            configuration.getOnPageChanged().accept(newPage);
+        }
     }
 }
