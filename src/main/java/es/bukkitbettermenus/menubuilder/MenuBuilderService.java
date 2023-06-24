@@ -18,7 +18,7 @@ public final class MenuBuilderService {
     public List<Page> createPages(MenuConfiguration configuration, int[][] baseItemNums, Player player){
         List<Page> pages = new LinkedList<>();
 
-        this.addToItemMapsItemsFunctions(configuration, player);
+        addToItemMapsItemsFunctions(configuration, player);
 
         Queue<ItemStack> variousItemsItemStack = this.findVariousItems(configuration);
         int variousItemStack = this.findVariousItemsItemNum(configuration);
@@ -105,10 +105,10 @@ public final class MenuBuilderService {
                     newItemNums[row][column] = actualItemNum;
                     int itemNumBreakpoint = itemNums.get(i);
                     items.set(i, itemMap.get(itemNumBreakpoint) == null ? new ItemStack(Material.AIR) : itemMap.get(itemNumBreakpoint).get(0));
+                    break;
                 }else { //No breakpoint
                     items.set(i, itemsPendingToAdd.poll());
                 }
-
             }
         }
 

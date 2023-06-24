@@ -26,6 +26,7 @@ public abstract class Menu<T> {
     @Getter @Setter private Player player;
 
     public Menu() {
+        this.configuration = configuration();
         this.baseItemNums = this.items();
         this.actualPageNumber = 0;
         this.pages = new ArrayList<>();
@@ -45,9 +46,15 @@ public abstract class Menu<T> {
         return this.configuration == null ? this.configuration = configuration() : this.configuration;
     }
 
+    public final void initializeFirstPage() {
+        replaceAllItems(getActualPage().getItems());
+    }
+
     public final void replaceAllItems(List<ItemStack> items) {
         inventory.clear();
-        inventory.addItem(items.toArray(new ItemStack[0]));
+        for (int i = 0; i < items.size(); i++) {
+            inventory.setItem(i, items.get(i));
+        }
     }
 
     public final void deleteItem(int slot){

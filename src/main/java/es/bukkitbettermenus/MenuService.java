@@ -56,6 +56,7 @@ public class MenuService {
         callBeforeShow(menu, player);
 
         menu.addPages(buildPages(player, menu));
+        menu.initializeFirstPage();
 
         player.openInventory(menu.getInventory());
 
