@@ -5,7 +5,9 @@ import es.bukkitbettermenus.menustate.AfterShow;
 import es.bukkitbettermenus.menustate.BeforeShow;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
 import es.bukkitbettermenus.repository.StaticMenuRepository;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class MenuService {
     public <T> Menu<T> open(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
         menu.setState(initialState);
-        menu.setPlayer(player);
+
         open(player, menu);
 
         return menu;
@@ -35,7 +37,6 @@ public class MenuService {
 
     public Menu open(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
-        menu.setPlayer(player);
         open(player, menu);
 
         return menu;
@@ -53,8 +54,7 @@ public class MenuService {
     private void tryToOpenMenu(Player player, Menu<?> menu) {
         callBeforeShow(menu, player);
 
-        menu.addPages(buildPages(player, menu));
-        menu.initializeFirstPage();
+        setupMenu(player, menu);
 
         player.openInventory(menu.getInventory());
 
@@ -67,8 +67,7 @@ public class MenuService {
 
     public Menu<?> buildMenu(Player player, Class<? extends Menu> menuClass) {
         Menu menu = menuConstructorResolver.getMenu(menuClass);
-        menu.setPlayer(player);
-        menu.addPages(buildPages(player, menu));
+        setupMenu(player, menu);
         openMenuRepository.save(player.getName(), menu);
 
         return menu;
@@ -76,9 +75,9 @@ public class MenuService {
 
     public <T> Menu<T> buildMenu(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         Menu<T> menu = this.menuConstructorResolver.getMenu(menuClass);
-        menu.addPages(buildPages(player, menu));
         menu.setState(initialState);
-        menu.setPlayer(player);
+        setupMenu(player, menu);
+
         openMenuRepository.save(player.getName(), menu);
 
         return menu;
@@ -86,8 +85,9 @@ public class MenuService {
 
     public <T> List<Page> buildPages(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
-        menu.setPlayer(player);
         menu.setState(initialState);
+        setupMenu(player, menu);
+
         openMenuRepository.save(player.getName(), menu);
 
         return buildPages(player, menu);
@@ -95,7 +95,8 @@ public class MenuService {
 
     public List<Page> buildPages(Player player, Class<? extends Menu> menuClass) {
         Menu menu = this.menuConstructorResolver.getMenu(menuClass);
-        menu.setPlayer(player);
+        setupMenu(player, menu);
+
         openMenuRepository.save(player.getName(), menu);
 
         return buildPages(player, menu);
@@ -120,5 +121,20 @@ public class MenuService {
         this.openMenuRepository.findByPlayerName(player.getName()).ifPresent(menu -> {
             player.closeInventory();
         });
+    }
+
+    private Inventory createEmptyInventory(Menu menu) {
+        SupportedInventoryType supportedInventoryType = SupportedInventoryType.getByArray(menu.items());
+
+        return supportedInventoryType.getSize() % 9 == 0 ?
+                Bukkit.createInventory(null, supportedInventoryType.getSize(), menu.getConfiguration().getTitle()) :
+                Bukkit.createInventory(null, supportedInventoryType.getBukkitInventoryType(), menu.getConfiguration().getTitle());
+    }
+
+    private void setupMenu(Player player, Menu menu) {
+        menu.setPlayer(player);
+        menu.addPages(buildPages(player, menu));
+        menu.setInventory(createEmptyInventory(menu));
+        menu.initializeFirstPage();
     }
 }

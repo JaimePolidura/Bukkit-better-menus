@@ -20,8 +20,8 @@ public final class MenuBuilderService {
 
         addToItemMapsItemsFunctions(configuration, player);
 
-        Queue<ItemStack> variousItemsItemStack = this.findVariousItems(configuration);
-        int variousItemStack = this.findVariousItemsItemNum(configuration);
+        Queue<ItemStack> variousItemsItemStack = findVariousItems(configuration);
+        int variousItemStack = findVariousItemsItemNum(configuration);
         BuildItemNumsReult buildItemNumsResult = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
         pages.add(new Page(buildItemNumsResult.items, buildItemNumsResult.itemNums, 0, true));
         int pageId = 1;

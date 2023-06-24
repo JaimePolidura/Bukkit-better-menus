@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class Menu<T> {
-    @Getter private final Inventory inventory;
+    @Getter private Inventory inventory;
     @Getter private final Map<String, Object> properties;
     @Getter private final UUID menuId;
     @Getter private final int[][] baseItemNums;
@@ -26,13 +26,11 @@ public abstract class Menu<T> {
     @Getter @Setter private Player player;
 
     public Menu() {
-        this.configuration = configuration();
         this.baseItemNums = this.items();
         this.actualPageNumber = 0;
         this.pages = new ArrayList<>();
         this.menuId = UUID.randomUUID();
         this.properties = new HashMap<>();
-        this.inventory = createBaseInventory();
     }
 
     public abstract int[][] items();
@@ -44,6 +42,10 @@ public abstract class Menu<T> {
 
     public MenuConfiguration getConfiguration() {
         return this.configuration == null ? this.configuration = configuration() : this.configuration;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public final void initializeFirstPage() {
@@ -183,13 +185,5 @@ public abstract class Menu<T> {
         if(configuration.getOnPageChanged() != null) {
             configuration.getOnPageChanged().accept(newPage);
         }
-    }
-
-    private Inventory createBaseInventory() {
-        SupportedInventoryType supportedInventoryType = SupportedInventoryType.getByArray(items());
-
-        return supportedInventoryType.getSize() % 9 == 0 ?
-                Bukkit.createInventory(null, supportedInventoryType.getSize(), configuration.getTitle()) :
-                Bukkit.createInventory(null, supportedInventoryType.getBukkitInventoryType(), configuration.getTitle());
     }
 }
