@@ -1,8 +1,10 @@
 package es.bukkitbettermenus;
 
+import es.bukkitbettermenus.utils.ExceptionUtils;
 import io.vavr.control.Try;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public final class MenuConstructorResolver {
     public Menu getMenu(Class<? extends Menu> menuClass) {
@@ -28,6 +30,11 @@ public final class MenuConstructorResolver {
             resolvedConstructorParameters[i] = instance;
         }
 
-        return Try.of(() -> constructor.newInstance(resolvedConstructorParameters)).get();
+        try {
+            return constructor.newInstance(resolvedConstructorParameters);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }

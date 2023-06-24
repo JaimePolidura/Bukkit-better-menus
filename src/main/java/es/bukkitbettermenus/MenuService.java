@@ -43,8 +43,6 @@ public class MenuService {
 
     public void open(Player player, Menu<?> menu){
         try {
-            player.closeInventory();
-
             tryToOpenMenu(player, menu);
         }catch (Exception e) {
             player.sendMessage(DARK_RED + "Some error happened " + e.getMessage());
@@ -68,7 +66,7 @@ public class MenuService {
     }
 
     public Menu<?> buildMenu(Player player, Class<? extends Menu> menuClass) {
-        Menu menu = this.menuConstructorResolver.getMenu(menuClass);
+        Menu menu = menuConstructorResolver.getMenu(menuClass);
         menu.setPlayer(player);
         menu.addPages(buildPages(player, menu));
         openMenuRepository.save(player.getName(), menu);
@@ -106,12 +104,8 @@ public class MenuService {
     public List<Page> buildPages(Player player, Menu<?> menu){
         return menu.getConfiguration().isStaticMenu() ?
                 this.staticMenuRepository.findByMenuClass(menu.getClass())
-                        .orElse(buildMenuPages(player, menu)) :
-                buildMenuPages(player,menu);
-    }
-
-    private List<Page> buildMenuPages(Player player, Menu<?> menu) {
-        return newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
+                        .orElse(newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player)) :
+                newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
     }
 
     private void callAfterShow(Menu<?> menu, Player player) {

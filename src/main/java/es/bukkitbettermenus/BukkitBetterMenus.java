@@ -12,9 +12,6 @@ import es.bukkitbettermenus.repository.StaticMenuRepository;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 public final class BukkitBetterMenus {
     public static final OpenMenuRepository OPEN_MENUS_REPOSITORY = new OpenMenuRepository();
     public static final StaticMenuRepository STATIC_MENUS_REPOSITORY = new StaticMenuRepository();
