@@ -59,7 +59,7 @@ public final class SyncMenuService {
     }
 
     private void mapPage(BiFunction<ItemStack, Integer, ItemStack> mapper, Page newPage, Page oldPage) {
-        ItemStack[] itemsNewPage = newPage.getInventory().getContents();
+        ItemStack[] itemsNewPage = newPage.getItems().toArray(new ItemStack[0]);
 
         for (int j = 0; j < itemsNewPage.length; j++) {
             int row = SupportedInventoryType.getRowBySlot(j, newPage.getItemsNums());
@@ -71,7 +71,7 @@ public final class SyncMenuService {
                     mapper.apply(itemNewPage.clone(), itemNum) :
                     new ItemStack(Material.AIR);
 
-            oldPage.setItem(j, itemToAdd, itemNum);
+            oldPage.setItem(itemToAdd, j, itemNum);
         }
     }
 

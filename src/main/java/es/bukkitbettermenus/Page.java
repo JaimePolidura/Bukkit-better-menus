@@ -14,42 +14,21 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public final class Page {
-    @Getter private final Inventory inventory;
+    @Getter private final List<ItemStack> items;
     @Getter private final int[][] itemsNums;
     @Getter private final int pageId;
     @Getter private boolean alreadyVisited;
 
-    public void deleteItem(int slot) {
-        this.inventory.clear(slot);
-    }
-
-    public void setItem(int slot, ItemStack newItem, int itemNum){
-        this.inventory.setItem(slot, newItem);
-        int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
-        int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
-
-        itemsNums[row][column] = itemNum;
-    }
-
-    public int getItemNumBySlot(int slot) {
-        int row = SupportedInventoryType.getRowBySlot(slot, this.inventory.getType());
-        int column = SupportedInventoryType.getColumnBySlot(slot, this.inventory.getType());
-
+    public int getItemNumBySlot(int row, int column) {
         return this.itemsNums[row][column];
     }
 
-    public void setItemLore(int slot, List<String> newLore){
-        ItemStack itemToEdit = inventory.getItem(slot);
-        ItemMeta itemToEditMeta = itemToEdit.getItemMeta();
-        itemToEditMeta.setLore(newLore);
-        itemToEdit.setItemMeta(itemToEditMeta);
-        inventory.setItem(slot, itemToEdit);
-    }
+    public void setItem(ItemStack item, int slot, int itemNum) {
+        int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
+        int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
 
-    public void setItemLore(int slot, int index, String newLore){
-        ItemStack itemToEdit = inventory.getItem(slot);
-        ItemStack itemEdited = ItemUtils.setLore(itemToEdit, index, newLore);
-        inventory.setItem(slot, itemEdited);
+        this.items.set(slot, item);
+        itemsNums[row][column] = itemNum;
     }
 
     public List<ItemStack> getItemsByItemNum(int itemNum){
@@ -59,7 +38,7 @@ public final class Page {
         for (int rows = 0; rows < this.itemsNums.length; rows++) {
             for (int columns = 0; columns < this.itemsNums[rows].length; columns++) {
                 if(itemsNums[rows][columns] == itemNum)
-                    toReturn.add(inventory.getItem(
+                    toReturn.add(items.get(
                             rows * maxCols + columns
                     ));
             }

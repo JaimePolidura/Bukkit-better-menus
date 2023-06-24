@@ -23,12 +23,12 @@ public final class MenuBuilderService {
         Queue<ItemStack> variousItemsItemStack = this.findVariousItems(configuration);
         int variousItemStack = this.findVariousItemsItemNum(configuration);
         BuildItemNumsReult buildItemNumsResult = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
-        pages.add(new Page(buildItemNumsResult.inventory, buildItemNumsResult.itemNums, 0, true));
+        pages.add(new Page(buildItemNumsResult.items, buildItemNumsResult.itemNums, 0, true));
         int pageId = 1;
 
         while (!variousItemsItemStack.isEmpty()){
             BuildItemNumsReult result = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
-            pages.add(new Page(result.inventory, result.itemNums, pageId, false));
+            pages.add(new Page(result.items, result.itemNums, pageId, false));
 
             pageId = pageId + 1;
         }
@@ -64,9 +64,9 @@ public final class MenuBuilderService {
     }
 
     public BuildItemNumsReult createItemNumsArrayForPage(MenuConfiguration configuration, int[][] baseItemNumsArray,
-                                                          Queue<ItemStack> variousItemsPendingToAdd, int variousImtesNum){
+                                                          Queue<ItemStack> itemsPendingToAdd, int itemsPendingToAddNum){
         List<Integer> itemNums = CollectionUtils.bidimensionalArrayToLinearArray(baseItemNumsArray);
-        Inventory inventoryOfPage = this.createBaseInventory(configuration, SupportedInventoryType.getByArray(baseItemNumsArray));
+        List<ItemStack> items = createItemLists(itemNums);
         int[][] newItemNums = new int[baseItemNumsArray.length][baseItemNumsArray[0].length];
         SupportedInventoryType supportedInventoryType = SupportedInventoryType.getByArray(baseItemNumsArray);
         Map<Integer, List<ItemStack>> itemMap = configuration.getItems();
@@ -76,23 +76,22 @@ public final class MenuBuilderService {
             int row = SupportedInventoryType.getRowBySlot(i, supportedInventoryType.getBukkitInventoryType());
             int column = SupportedInventoryType.getColumnBySlot(i, supportedInventoryType.getBukkitInventoryType());
             List<ItemStack> itemsToAdd = itemMap.get(actualItemNum);
-
             if(itemsToAdd == null){
                 newItemNums[row][column] = 0;
                 continue;
             }
             if(itemsToAdd.size() == 1){
                 newItemNums[row][column] = actualItemNum;
-                inventoryOfPage.setItem(i, configuration.getItems().get(actualItemNum).get(0));
+                items.set(i, configuration.getItems().get(actualItemNum).get(0));
 
                 continue;
             }
-            if(variousItemsPendingToAdd == null || variousItemsPendingToAdd.isEmpty()){
+            if(itemsPendingToAdd == null || itemsPendingToAdd.isEmpty()){
                 continue;
             }
 
             //The las has size() > 1
-            int sizeItemPendingToAdd = variousItemsPendingToAdd.size();
+            int sizeItemPendingToAdd = itemsPendingToAdd.size();
             for (int j = 0; j < sizeItemPendingToAdd; j++) {
                 if(j > 0) i++;
                 if(i >= itemNums.size()) break;
@@ -100,25 +99,36 @@ public final class MenuBuilderService {
                 row = SupportedInventoryType.getRowBySlot(i, supportedInventoryType.getBukkitInventoryType());
                 column = SupportedInventoryType.getColumnBySlot(i, supportedInventoryType.getBukkitInventoryType());
 
+                newItemNums[row][column] = actualItemNum;
+
                 if(isBreakpoint(configuration, baseItemNumsArray, row, column)){
                     newItemNums[row][column] = actualItemNum;
                     int itemNumBreakpoint = itemNums.get(i);
-                    inventoryOfPage.setItem(i, itemMap.get(itemNumBreakpoint) == null ? new ItemStack(Material.AIR) : itemMap.get(itemNumBreakpoint).get(0));
-                    break;
+                    items.set(i, itemMap.get(itemNumBreakpoint) == null ? new ItemStack(Material.AIR) : itemMap.get(itemNumBreakpoint).get(0));
+                }else { //No breakpoint
+                    items.set(i, itemsPendingToAdd.poll());
                 }
 
-                //No breakpoint
-                newItemNums[row][column] = actualItemNum;
-                inventoryOfPage.setItem(i, variousItemsPendingToAdd.poll());
             }
         }
 
-        return new BuildItemNumsReult(inventoryOfPage, newItemNums, variousItemsPendingToAdd, variousImtesNum);
+        return new BuildItemNumsReult(items, newItemNums, itemsPendingToAdd, itemsPendingToAddNum);
+    }
+
+    private static List<ItemStack> createItemLists(List<Integer> itemNums) {
+        List<ItemStack> items = new ArrayList<>(itemNums.size());
+        ItemStack air = new ItemStack(Material.AIR);
+
+        for (Integer itemNum : itemNums) {
+            items.add(air);
+        }
+
+        return items;
     }
 
     @AllArgsConstructor
     private static class BuildItemNumsReult {
-        @Getter private final Inventory inventory;
+        @Getter private final List<ItemStack> items;
         @Getter private final int[][] itemNums;
         @Getter private final Queue<ItemStack> itemsOverflow;
         @Getter private final int itemsNumOverflow;
@@ -126,11 +136,5 @@ public final class MenuBuilderService {
 
     private boolean isBreakpoint(MenuConfiguration configuration, int[][] originalItemNums, int row, int column) {
         return originalItemNums[row][column] == configuration.getBreakpointItemNum();
-    }
-
-    private Inventory createBaseInventory(MenuConfiguration configuration, SupportedInventoryType supportedInventoryType) {
-        return supportedInventoryType.getSize() % 9 == 0 ?
-                Bukkit.createInventory(null, supportedInventoryType.getSize(), configuration.getTitle()) :
-                Bukkit.createInventory(null, supportedInventoryType.getBukkitInventoryType(), configuration.getTitle());
     }
 }

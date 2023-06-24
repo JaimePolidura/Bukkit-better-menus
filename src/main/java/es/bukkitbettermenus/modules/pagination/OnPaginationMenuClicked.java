@@ -21,9 +21,9 @@ public final class OnPaginationMenuClicked implements OnMenuClicked {
 
     private void performPaginationAction(Player player, Menu menu, int itemNumClicked) {
         if(itemNumClicked == menu.getConfiguration().getPaginationConfiguration().getBackward().getItemNum())
-            paginationService.goBackward(player, menu);
+            paginationService.goBackward(menu);
         else
-            paginationService.goForward(player, menu);
+            paginationService.goForward(menu);
     }
 
     private boolean hasClickedPaginationsItems(Menu menu, int itemNumClicked) {

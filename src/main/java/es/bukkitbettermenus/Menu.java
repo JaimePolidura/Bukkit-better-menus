@@ -1,16 +1,20 @@
 package es.bukkitbettermenus;
 
 import es.bukkitbettermenus.configuration.MenuConfiguration;
+import es.bukkitbettermenus.utils.ItemUtils;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class Menu<T> {
+    @Getter private final Inventory inventory;
     @Getter private final Map<String, Object> properties;
     @Getter private final UUID menuId;
     @Getter private final int[][] baseItemNums;
@@ -27,6 +31,7 @@ public abstract class Menu<T> {
         this.pages = new ArrayList<>();
         this.menuId = UUID.randomUUID();
         this.properties = new HashMap<>();
+        this.inventory = createBaseInventory();
     }
 
     public abstract int[][] items();
@@ -40,8 +45,13 @@ public abstract class Menu<T> {
         return this.configuration == null ? this.configuration = configuration() : this.configuration;
     }
 
-    public final void deleteItem(int slot, int pageNumber){
-        this.getPage(pageNumber).deleteItem(slot);
+    public final void replaceAllItems(List<ItemStack> items) {
+        inventory.clear();
+        inventory.addItem(items.toArray(new ItemStack[0]));
+    }
+
+    public final void deleteItem(int slot){
+        this.inventory.clear(slot);
     }
 
     public final List<Page> getPages() {
@@ -64,43 +74,51 @@ public abstract class Menu<T> {
         this.pages.addAll(pages);
     }
 
-    public final Inventory getInventory() {
-        return this.pages.get(this.actualPageNumber).getInventory();
-    }
-
     public final int[][] getActualItemNums() {
         return this.pages.get(this.actualPageNumber).getItemsNums();
     }
 
     public void setItem(int pageNumber, int slotItem, ItemStack newItem, int itemNum) {
-        this.getPage(pageNumber).setItem(slotItem, newItem, itemNum);
+        Page page = getActualPage();
+        inventory.setItem(slotItem, newItem);
+
+        int row = SupportedInventoryType.getRowBySlot(slotItem, page.getItemsNums());
+        int column = SupportedInventoryType.getColumnBySlot(slotItem, page.getItemsNums());
+
+        page.getItemsNums()[row][column] = itemNum;
     }
 
-    public void setItemActualPage(int slotItem, ItemStack newItem, int itemNum) {
-        this.getPage(actualPageNumber).setItem(slotItem, newItem, itemNum);
-    }
+    public int getItemNumBySlot(int slot) {
+        int row = SupportedInventoryType.getRowBySlot(slot, inventory.getType());
+        int column = SupportedInventoryType.getColumnBySlot(slot, inventory.getType());
 
-    public final void setItemLore(int pageNumber, int itemSlot, List<String> newLore) {
-        this.getPage(pageNumber).setItemLore(itemSlot, newLore);
+        return getActualPage().getItemNumBySlot(row, column);
     }
 
     public final void setItemLoreActualPage(int itemSlot, List<String> newLore) {
-        this.getPage(actualPageNumber).setItemLore(itemSlot, newLore);
+        ItemStack itemToEdit = inventory.getItem(itemSlot);
+        ItemMeta itemToEditMeta = itemToEdit.getItemMeta();
+        itemToEditMeta.setLore(newLore);
+        itemToEdit.setItemMeta(itemToEditMeta);
+
+        inventory.setItem(itemSlot, itemToEdit);
     }
 
-    public final List<ItemStack> getItemsByItemNum(int itemNum) {
+    public void setItemLore(int slot, int index, String newLore) {
+        ItemStack itemToEdit = inventory.getItem(slot);
+        ItemStack itemEdited = ItemUtils.setLore(itemToEdit, index, newLore);
+        inventory.setItem(slot, itemEdited);
+    }
+
+    public final List<ItemStack> getActualItemsByItemNum(int itemNum) {
+        return this.getActualPage().getItemsByItemNum(itemNum);
+    }
+
+    public final List<ItemStack> getAllItemsByItemNum(int itemNum) {
         return this.getPages().stream()
                 .map(page -> page.getItemsByItemNum(itemNum))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-    }
-
-    public final void setItemLore(int pagenNumer, int itemSlot, int indexItemLore, String newLore) {
-        this.pages.get(pagenNumer).setItemLore(itemSlot, indexItemLore, newLore);
-    }
-
-    public final void setItemLoreActualPage(int itemSlot, int indexItemLore, String newLore) {
-        this.pages.get(actualPageNumber).setItemLore(itemSlot, indexItemLore, newLore);
     }
 
     public final Page nextPage() {
@@ -158,5 +176,13 @@ public abstract class Menu<T> {
         if(configuration.getOnPageChanged() != null) {
             configuration.getOnPageChanged().accept(newPage);
         }
+    }
+
+    private Inventory createBaseInventory() {
+        SupportedInventoryType supportedInventoryType = SupportedInventoryType.getByArray(items());
+
+        return supportedInventoryType.getSize() % 9 == 0 ?
+                Bukkit.createInventory(null, supportedInventoryType.getSize(), configuration.getTitle()) :
+                Bukkit.createInventory(null, supportedInventoryType.getBukkitInventoryType(), configuration.getTitle());
     }
 }
