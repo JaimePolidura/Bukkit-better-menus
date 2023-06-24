@@ -111,8 +111,9 @@ public abstract class Menu<T> {
         this.actualPageNumber++;
         Page newPage = this.pages.get(this.actualPageNumber);
 
-        newPage.setVisited();
         callOnPageChangedCallback(newPage);
+
+        newPage.setVisited();
 
         return newPage;
     }
@@ -125,9 +126,10 @@ public abstract class Menu<T> {
         this.actualPageNumber--;
         Page newPage = pages.get(actualPageNumber);
 
-        newPage.setVisited();
         callOnPageChangedCallback(newPage);
 
+        newPage.setVisited();
+        
         return newPage;
     }
 
