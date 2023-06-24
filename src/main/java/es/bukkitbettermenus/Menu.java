@@ -129,7 +129,7 @@ public abstract class Menu<T> {
         callOnPageChangedCallback(newPage);
 
         newPage.setVisited();
-        
+
         return newPage;
     }
 

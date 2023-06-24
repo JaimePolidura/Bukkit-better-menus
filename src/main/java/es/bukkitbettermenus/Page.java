@@ -16,6 +16,7 @@ import java.util.List;
 public final class Page {
     @Getter private final Inventory inventory;
     @Getter private final int[][] itemsNums;
+    @Getter private final int pageId;
     @Getter private boolean alreadyVisited;
 
     public void deleteItem(int slot) {

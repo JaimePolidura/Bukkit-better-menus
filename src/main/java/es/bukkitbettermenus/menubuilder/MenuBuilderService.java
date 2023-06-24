@@ -23,11 +23,14 @@ public final class MenuBuilderService {
         Queue<ItemStack> variousItemsItemStack = this.findVariousItems(configuration);
         int variousItemStack = this.findVariousItemsItemNum(configuration);
         BuildItemNumsReult buildItemNumsResult = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
-        pages.add(new Page(buildItemNumsResult.inventory, buildItemNumsResult.itemNums, true));
+        pages.add(new Page(buildItemNumsResult.inventory, buildItemNumsResult.itemNums, 0, true));
+        int pageId = 1;
 
         while (!variousItemsItemStack.isEmpty()){
             BuildItemNumsReult result = createItemNumsArrayForPage(configuration, baseItemNums, variousItemsItemStack, variousItemStack);
-            pages.add(new Page(result.inventory, result.itemNums, false));
+            pages.add(new Page(result.inventory, result.itemNums, pageId, false));
+
+            pageId = pageId + 1;
         }
 
         return pages;
