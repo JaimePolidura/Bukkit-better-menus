@@ -4,7 +4,6 @@ import es.bukkitbettermenus.configuration.MenuConfiguration;
 import es.bukkitbettermenus.utils.ItemUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +17,7 @@ public abstract class Menu<T> {
     @Getter private final Map<String, Object> properties;
     @Getter private final UUID menuId;
     @Getter private final int[][] baseItemNums;
-    @Getter private int actualPageNumber;
+    @Getter private int actualPageId;
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
 
@@ -27,7 +26,7 @@ public abstract class Menu<T> {
 
     public Menu() {
         this.baseItemNums = this.items();
-        this.actualPageNumber = 0;
+        this.actualPageId = 0;
         this.pages = new ArrayList<>();
         this.menuId = UUID.randomUUID();
         this.properties = new HashMap<>();
@@ -76,7 +75,7 @@ public abstract class Menu<T> {
     }
 
     public final Page getActualPage() {
-        return this.pages.get(actualPageNumber);
+        return this.pages.get(actualPageId);
     }
 
     public final void addPages(List<Page> pages) {
@@ -84,16 +83,20 @@ public abstract class Menu<T> {
     }
 
     public final int[][] getActualItemNums() {
-        return this.pages.get(this.actualPageNumber).getItemsNums();
+        return this.pages.get(this.actualPageId).getItemsNums();
+    }
+
+    public void setActualItem(int slotItem, ItemStack newItem, int itemNum) {
+        setItem(actualPageId, slotItem, newItem, itemNum);
     }
 
     public void setItem(int pageNumber, int slotItem, ItemStack newItem, int itemNum) {
-        Page page = getActualPage();
+        Page page = pages.get(pageNumber);
         inventory.setItem(slotItem, newItem);
 
         int row = SupportedInventoryType.getRowBySlot(slotItem, page.getItemsNums());
         int column = SupportedInventoryType.getColumnBySlot(slotItem, page.getItemsNums());
-
+        
         page.getItemsNums()[row][column] = itemNum;
     }
 
@@ -131,12 +134,12 @@ public abstract class Menu<T> {
     }
 
     public final Page nextPage() {
-        if (actualPageNumber + 1 >= pages.size()) {
+        if (actualPageId + 1 >= pages.size()) {
             return pages.get(pages.size() - 1);
         }
 
-        this.actualPageNumber++;
-        Page newPage = this.pages.get(this.actualPageNumber);
+        this.actualPageId++;
+        Page newPage = this.pages.get(this.actualPageId);
 
         callOnPageChangedCallback(newPage);
 
@@ -146,12 +149,12 @@ public abstract class Menu<T> {
     }
 
     public final Page backPage() {
-        if (actualPageNumber == 0) {
+        if (actualPageId == 0) {
             return pages.get(0);
         }
 
-        this.actualPageNumber--;
-        Page newPage = pages.get(actualPageNumber);
+        this.actualPageId--;
+        Page newPage = pages.get(actualPageId);
 
         callOnPageChangedCallback(newPage);
 

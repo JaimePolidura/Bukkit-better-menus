@@ -1,12 +1,9 @@
 package es.bukkitbettermenus;
 
-import es.bukkitbettermenus.utils.ItemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;

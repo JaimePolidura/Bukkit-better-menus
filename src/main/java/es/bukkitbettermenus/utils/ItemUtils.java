@@ -29,10 +29,11 @@ public final class ItemUtils {
     }
 
     public static ItemStack setDisplayname(ItemStack item, String newDisplayName){
-        ItemMeta itemMeta = item.getItemMeta();
-        if(itemMeta == null){
+        if(item == null)
             return item;
-        }
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null)
+            return item;
 
         itemMeta.setDisplayName(newDisplayName);
         item.setItemMeta(itemMeta);
@@ -41,10 +42,12 @@ public final class ItemUtils {
     }
 
     public static ItemStack setLore(ItemStack item, int index, String newLoreLine){
-        ItemMeta itemMeta = item.getItemMeta();
-        if(itemMeta == null){
+        if(item == null)
             return item;
-        }
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null)
+            return item;
+
         List<String> lore = itemMeta.getLore();
         lore.set(index, newLoreLine);
         itemMeta.setLore(lore);
