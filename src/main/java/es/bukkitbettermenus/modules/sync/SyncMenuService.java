@@ -49,7 +49,7 @@ public final class SyncMenuService {
         if(syncConfig.getMapper() == null) return newPages;
 
         BiFunction<ItemStack, Integer, ItemStack> itemMapper = syncConfig.getMapper();
-    
+
         for(int i = 0; i < newPages.size(); i++){
             Page newPage = newPages.get(i);
             Page oldPage = oldPages.get(i);
@@ -78,19 +78,6 @@ public final class SyncMenuService {
             if(menuToMap.getActualPageId() == oldPage.getPageId()){
                 menuToMap.setActualItem(j, itemMapped, itemNum);
             }
-        }
-    }
-
-    @AllArgsConstructor
-    private static class ItemPage {
-        @Getter private final Page page;
-        @Getter private final ItemStack itemStack;
-        @Getter private final int itemNum;
-        @Getter private final Inventory inventory;
-        @Getter private final int slot;
-
-        public static ItemPage of (Page page, ItemStack itemStack, int itemNum, Inventory inventory, int slot){
-            return new ItemPage(page, itemStack, itemNum, inventory, slot);
         }
     }
 }

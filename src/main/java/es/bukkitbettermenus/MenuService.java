@@ -104,7 +104,7 @@ public class MenuService {
 
     public List<Page> buildPages(Player player, Menu<?> menu){
         return menu.getConfiguration().isStaticMenu() ?
-                this.staticMenuRepository.findByMenuClass(menu.getClass())
+                staticMenuRepository.findByMenuClass(menu.getClass())
                         .orElse(newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player)) :
                 newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
     }
@@ -135,6 +135,6 @@ public class MenuService {
         menu.setPlayer(player);
         menu.addPages(buildPages(player, menu));
         menu.setInventory(createEmptyInventory(menu));
-        menu.initializeFirstPage();
+        menu.initializeInventoryWithFirstPage();
     }
 }

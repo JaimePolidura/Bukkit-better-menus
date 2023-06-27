@@ -35,39 +35,35 @@ public abstract class Menu<T> {
     public abstract int[][] items();
     public abstract MenuConfiguration configuration();
 
-    public void close() {
+    public final void close() {
         player.closeInventory();
     }
 
-    public MenuConfiguration getConfiguration() {
+    public final MenuConfiguration getConfiguration() {
         return this.configuration == null ? this.configuration = configuration() : this.configuration;
     }
 
-    public void setInventory(Inventory inventory) {
+    public final void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
 
-    public final void initializeFirstPage() {
-        replaceAllItems(getActualPage().getItems());
+    public final void initializeInventoryWithFirstPage() {
+        replaceAllInventoryItems(getActualPage().getItems());
     }
 
-    public final void replaceAllItems(List<ItemStack> items) {
+    public final void replaceAllInventoryItems(List<ItemStack> items) {
         inventory.clear();
         for (int i = 0; i < items.size(); i++) {
             inventory.setItem(i, items.get(i));
         }
     }
 
-    public final void deleteItem(int slot){
-        this.inventory.clear(slot);
-    }
-
     public final List<Page> getPages() {
         return new ArrayList<>(this.pages);
     }
 
-    public final Page getPage(int pageNumber) {
-        return this.pages.get(pageNumber);
+    public final Page getPage(int pageId) {
+        return this.pages.get(pageId);
     }
 
     public final Page getLastPage() {
@@ -86,40 +82,53 @@ public abstract class Menu<T> {
         return this.pages.get(this.actualPageId).getItemsNums();
     }
 
-    public void setActualItem(int slotItem, ItemStack newItem, int itemNum) {
+    public final void decreaseActualQuantityOrRemove(int slot) {
+        ItemStack item = inventory.getItem(slot);
+        int itemNum = getActualItemNumBySlot(slot);
+        int oldQuantity = item.getAmount();
+        int newQuantity = oldQuantity - 1;
+
+        if(newQuantity > 0) {
+            setActualItem(slot, item, itemNum);
+        }else{
+            clearActualItem(slot);
+        }
+    }
+
+    public final void setActualItem(int slotItem, ItemStack newItem, int itemNum) {
         setItem(actualPageId, slotItem, newItem, itemNum);
     }
 
-    public void setItem(int pageNumber, int slotItem, ItemStack newItem, int itemNum) {
-        Page page = pages.get(pageNumber);
-        inventory.setItem(slotItem, newItem);
+    public final void setItem(int pageId, int slotItem, ItemStack newItem, int itemNum) {
+        Page page = pages.get(pageId);
 
-        int row = SupportedInventoryType.getRowBySlot(slotItem, page.getItemsNums());
-        int column = SupportedInventoryType.getColumnBySlot(slotItem, page.getItemsNums());
-        
-        page.getItemsNums()[row][column] = itemNum;
+        inventory.setItem(slotItem, newItem);
+        page.setItem(newItem, slotItem, itemNum);
     }
 
-    public int getItemNumBySlot(int slot) {
+    public final int getActualItemNumBySlot(int slot) {
         int row = SupportedInventoryType.getRowBySlot(slot, inventory.getType());
         int column = SupportedInventoryType.getColumnBySlot(slot, inventory.getType());
 
         return getActualPage().getItemNumBySlot(row, column);
     }
 
-    public final void setItemLoreActualPage(int itemSlot, List<String> newLore) {
-        ItemStack itemToEdit = inventory.getItem(itemSlot);
+    public final void setItemLoreActualPage(int slot, List<String> newLore) {
+        ItemStack itemToEdit = inventory.getItem(slot);
         ItemMeta itemToEditMeta = itemToEdit.getItemMeta();
         itemToEditMeta.setLore(newLore);
         itemToEdit.setItemMeta(itemToEditMeta);
+        int itemNum = getActualItemNumBySlot(slot);
 
-        inventory.setItem(itemSlot, itemToEdit);
+        setActualItem(slot, itemToEdit, itemNum);
     }
 
-    public void setItemLore(int slot, int index, String newLore) {
+    public final void setItemLore(int slot, int index, String newLore) {
         ItemStack itemToEdit = inventory.getItem(slot);
         ItemStack itemEdited = ItemUtils.setLore(itemToEdit, index, newLore);
-        inventory.setItem(slot, itemEdited);
+        int itemNum = getActualItemNumBySlot(slot);
+
+        setActualItem(slot, itemToEdit, itemNum);
     }
 
     public final List<ItemStack> getActualItemsByItemNum(int itemNum) {
@@ -131,6 +140,16 @@ public abstract class Menu<T> {
                 .map(page -> page.getItemsByItemNum(itemNum))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    public final void clearActualItem(int slot) {
+        pages.get(getActualPageId()).clearItem(slot);
+        inventory.clear(slot);
+    }
+
+    public final void clearItem(int pageId, int slot) {
+        pages.get(pageId).clearItem(slot);
+        inventory.clear(slot);
     }
 
     public final Page nextPage() {

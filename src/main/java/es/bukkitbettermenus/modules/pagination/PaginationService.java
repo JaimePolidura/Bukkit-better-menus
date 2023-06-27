@@ -6,11 +6,11 @@ import es.bukkitbettermenus.Page;
 public final class PaginationService {
     public void goForward(Menu menu) {
         Page page = menu.nextPage();
-        menu.replaceAllItems(page.getItems());
+        menu.replaceAllInventoryItems(page.getItems());
     }
 
     public void goBackward(Menu menu) {
         Page page = menu.backPage();
-        menu.replaceAllItems(page.getItems());
+        menu.replaceAllInventoryItems(page.getItems());
     }
 }

@@ -3,6 +3,7 @@ package es.bukkitbettermenus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -24,8 +25,16 @@ public final class Page {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
 
-        this.items.set(slot, item);
+        items.set(slot, item);
         itemsNums[row][column] = itemNum;
+    }
+
+    public void clearItem(int slot) {
+        int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
+        int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
+
+        items.set(slot, new ItemStack(Material.AIR));
+        itemsNums[row][column] = 0;
     }
 
     public List<ItemStack> getItemsByItemNum(int itemNum){

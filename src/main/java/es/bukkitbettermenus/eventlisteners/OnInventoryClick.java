@@ -47,7 +47,7 @@ public class OnInventoryClick implements Listener {
         boolean inventorTypePlayer = event.getCurrentItem() == null || inventoryType == InventoryType.PLAYER;
 
         if (!inventorTypePlayer){
-            int itemNumClicked = menu.getItemNumBySlot(event.getSlot());
+            int itemNumClicked = menu.getActualItemNumBySlot(event.getSlot());
 
             performOnClickInMenu(event, menu, itemNumClicked);
         }

@@ -9,7 +9,6 @@ import java.util.function.BiFunction;
 @AllArgsConstructor
 public final class SyncMenuConfiguration {
     @Getter private final BiFunction<ItemStack, Integer, ItemStack> mapper;
-    @Getter private final boolean lockOnSync;
 
     public static SyncMenuConfigurationBuilder builder(){
         return new SyncMenuConfigurationBuilder();
@@ -17,11 +16,9 @@ public final class SyncMenuConfiguration {
 
     public static class SyncMenuConfigurationBuilder {
         private BiFunction<ItemStack, Integer, ItemStack> mapper;
-        private boolean lockOnSync;
 
         public SyncMenuConfigurationBuilder(){
             this.mapper = (itemStack, integer) -> itemStack;
-            this.lockOnSync = false;
         }
 
         public SyncMenuConfigurationBuilder mapper(BiFunction<ItemStack, Integer, ItemStack> mapper){
@@ -29,13 +26,8 @@ public final class SyncMenuConfiguration {
             return this;
         }
 
-        public SyncMenuConfigurationBuilder lockOnSync(boolean value) {
-            this.lockOnSync = value;
-            return this;
-        }
-
         public SyncMenuConfiguration build(){
-            return new SyncMenuConfiguration(this.mapper, this.lockOnSync);
+            return new SyncMenuConfiguration(this.mapper);
         }
     }
 }
