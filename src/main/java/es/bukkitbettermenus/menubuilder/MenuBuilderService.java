@@ -102,9 +102,9 @@ public final class MenuBuilderService {
                 newItemNums[row][column] = actualItemNum;
 
                 if(isBreakpoint(configuration, baseItemNumsArray, row, column)){
-                    newItemNums[row][column] = actualItemNum;
                     int itemNumBreakpoint = itemNums.get(i);
                     items.set(i, itemMap.get(itemNumBreakpoint) == null ? new ItemStack(Material.AIR) : itemMap.get(itemNumBreakpoint).get(0));
+                    newItemNums[row][column] = itemNumBreakpoint;
                     break;
                 }else { //No breakpoint
                     items.set(i, itemsPendingToAdd.poll());
