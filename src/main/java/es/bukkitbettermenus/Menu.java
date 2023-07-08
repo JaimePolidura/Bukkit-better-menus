@@ -2,6 +2,7 @@ package es.bukkitbettermenus;
 
 import es.bukkitbettermenus.configuration.MenuConfiguration;
 import es.bukkitbettermenus.utils.ItemUtils;
+import es.bukkitbettermenus.utils.TriConsumer;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public abstract class Menu<T> {
@@ -128,11 +130,23 @@ public abstract class Menu<T> {
         ItemStack itemEdited = ItemUtils.setLore(itemToEdit, index, newLore);
         int itemNum = getActualItemNumBySlot(slot);
 
-        setActualItem(slot, itemToEdit, itemNum);
+        setActualItem(slot, itemEdited, itemNum);
     }
 
     public final List<ItemStack> getActualItemsByItemNum(int itemNum) {
         return this.getActualPage().getItemsByItemNum(itemNum);
+    }
+
+    public final void forEachAllItemsByItemNum(int itemNum, TriConsumer<ItemStack, Integer, Integer> consumerItemPageSlot) {
+        for (Page page : this.pages) {
+            page.forEachItemByItemNum(itemNum, (item, slot) -> {
+                consumerItemPageSlot.consume(item, page.getPageId(), slot);
+            });
+        }
+    }
+
+    public final void forEachActualItemsByItemNum(int itemNum, BiConsumer<ItemStack, Integer> consumerItemSlot) {
+        getActualPage().forEachItemByItemNum(itemNum, consumerItemSlot);
     }
 
     public final List<ItemStack> getAllItemsByItemNum(int itemNum) {

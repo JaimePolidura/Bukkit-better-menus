@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
@@ -30,6 +31,12 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder amount(int amount) {
+        this.itemStack.setAmount(amount);
+
+        return this;
+    }
+
     public ItemBuilder lore(List<String> lore) {
         this.itemMeta.setLore(lore);
 
@@ -48,15 +55,19 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
-        this.itemMeta.addEnchant(enchantment, level, true);
+    public ItemBuilder addEnchanments(Map<Enchantment, Integer> enchantments) {
+        for(Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()){
+            addEnchantment(entry.getKey(), entry.getValue());
+        }
 
         return this;
     }
 
-    public ItemBuilder addEnchanments(Map<Enchantment, Integer> enchantments) {
-        for(Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()){
-            this.itemMeta.addEnchant(entry.getKey(), entry.getValue(), true);
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
+        if(this.itemStack.getType() == Material.ENCHANTED_BOOK){
+            ((EnchantmentStorageMeta) itemMeta).addStoredEnchant(enchantment, level, true);
+        }else{
+            this.itemMeta.addEnchant(enchantment, level, true);
         }
 
         return this;

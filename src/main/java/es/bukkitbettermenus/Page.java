@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @AllArgsConstructor
 @ToString
@@ -35,6 +36,21 @@ public final class Page {
 
         items.set(slot, new ItemStack(Material.AIR));
         itemsNums[row][column] = 0;
+    }
+
+    public void forEachItemByItemNum(int itemNum, BiConsumer<ItemStack, Integer> consumer){
+        int maxCols = this.itemsNums[0].length;
+
+        for (int rows = 0; rows < this.itemsNums.length; rows++) {
+            for (int columns = 0; columns < this.itemsNums[rows].length; columns++) {
+                if(itemsNums[rows][columns] == itemNum) {
+                    int slot = rows * maxCols + columns;
+                    ItemStack item = items.get(slot);
+
+                    consumer.accept(item, slot);
+                }
+            }
+        }
     }
 
     public List<ItemStack> getItemsByItemNum(int itemNum){

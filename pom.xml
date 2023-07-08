@@ -18,6 +18,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -28,7 +32,6 @@
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -46,6 +49,12 @@
             <groupId>io.vavr</groupId>
             <artifactId>vavr</artifactId>
             <version>0.10.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.JaimeTruman</groupId>
+            <artifactId>Java-DDD</artifactId>
+            <version>1.1.17</version>
         </dependency>
     </dependencies>
 
