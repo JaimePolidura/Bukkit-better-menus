@@ -18,7 +18,7 @@ public final class Page {
     @Getter private final int pageId;
     @Getter private boolean alreadyVisited;
 
-    public int getItemNumBySlot(int row, int column) {
+    public int getItemNumByRowAndColumn(int row, int column) {
         return this.itemsNums[row][column];
     }
 
@@ -28,7 +28,7 @@ public final class Page {
         for (int rows = 0; rows < itemsNums.length; rows++) {
             for (int columns = 0; columns < itemsNums[columns].length; columns++) {
                 if(itemsNums[rows][columns] == itemNum){
-                    return rows * maxCols + columns;
+                    return rows * maxCols + columns + 1; //slot
                 }
             }
         }
@@ -62,8 +62,9 @@ public final class Page {
         for (int rows = 0; rows < this.itemsNums.length; rows++) {
             for (int columns = 0; columns < this.itemsNums[rows].length; columns++) {
                 if(itemsNums[rows][columns] == itemNum) {
-                    int slot = rows * maxCols + columns;
-                    ItemStack item = items.get(slot);
+                    int itemIndex = rows * maxCols + columns;
+                    int slot = itemIndex + 1;
+                    ItemStack item = items.get(itemIndex);
 
                     consumer.accept(item, slot);
                 }

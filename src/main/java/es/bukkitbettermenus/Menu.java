@@ -112,7 +112,7 @@ public abstract class Menu<T> {
         int row = SupportedInventoryType.getRowBySlot(slot, inventory.getType());
         int column = SupportedInventoryType.getColumnBySlot(slot, inventory.getType());
 
-        return getActualPage().getItemNumBySlot(row, column);
+        return getActualPage().getItemNumByRowAndColumn(row, column);
     }
 
     public final void setActualItemLore(int slot, List<String> newLore) {
