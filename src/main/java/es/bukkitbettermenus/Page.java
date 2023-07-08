@@ -39,20 +39,24 @@ public final class Page {
     public void setItem(ItemStack item, int slot, int itemNum) {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
+        int itemIndex = slot - 1;
 
-        items.set(slot, item);
+        items.set(itemIndex, item);
         itemsNums[row][column] = itemNum;
     }
 
     public void updateItem(ItemStack item, int slot) {
-        items.set(slot, item);
+        int itemIndex = slot - 1;
+
+        items.set(itemIndex, item);
     }
 
     public void clearItem(int slot) {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
+        int itemIndex = slot - 1;
 
-        items.set(slot, new ItemStack(Material.AIR));
+        items.set(itemIndex, new ItemStack(Material.AIR));
         itemsNums[row][column] = 0;
     }
 

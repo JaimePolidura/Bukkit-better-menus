@@ -135,7 +135,9 @@ public abstract class Menu<T> {
 
     public final void setItemLore(int pageId, int slot, int index, String newLore) {
         Page page = this.pages.get(pageId);
-        ItemStack item = page.getItems().get(slot);
+        int itemIndex = slot - 1;
+
+        ItemStack item = page.getItems().get(itemIndex);
         ItemUtils.setLore(item, index, newLore);
 
         page.updateItem(item, slot);
