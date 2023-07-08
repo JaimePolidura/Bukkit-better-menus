@@ -32,6 +32,8 @@ public final class Page {
                 }
             }
         }
+
+        return -1;
     }
 
     public void setItem(ItemStack item, int slot, int itemNum) {
