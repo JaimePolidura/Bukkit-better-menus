@@ -30,6 +30,13 @@ public final class Page {
         itemsNums[row][column] = itemNum;
     }
 
+    public void updateItem(ItemStack item, int slot) {
+        int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
+        int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
+
+        items.set(slot, item);
+    }
+
     public void clearItem(int slot) {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);

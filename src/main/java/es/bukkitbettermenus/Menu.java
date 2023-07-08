@@ -115,7 +115,7 @@ public abstract class Menu<T> {
         return getActualPage().getItemNumBySlot(row, column);
     }
 
-    public final void setItemLoreActualPage(int slot, List<String> newLore) {
+    public final void setActualItemLore(int slot, List<String> newLore) {
         ItemStack itemToEdit = inventory.getItem(slot);
         ItemMeta itemToEditMeta = itemToEdit.getItemMeta();
         itemToEditMeta.setLore(newLore);
@@ -125,12 +125,24 @@ public abstract class Menu<T> {
         setActualItem(slot, itemToEdit, itemNum);
     }
 
-    public final void setItemLore(int slot, int index, String newLore) {
+    public final void setActualItemLore(int slot, int index, String newLore) {
         ItemStack itemToEdit = inventory.getItem(slot);
         ItemStack itemEdited = ItemUtils.setLore(itemToEdit, index, newLore);
         int itemNum = getActualItemNumBySlot(slot);
 
         setActualItem(slot, itemEdited, itemNum);
+    }
+
+    public final void setItemLore(int pageId, int slot, int index, String newLore) {
+        Page page = this.pages.get(pageId);
+        ItemStack item = page.getItems().get(slot);
+        ItemUtils.setLore(item, index, newLore);
+
+        page.updateItem(item, slot);
+
+        if(page.getPageId() == getActualPageId()){
+            inventory.setItem(slot, item);
+        }
     }
 
     public final List<ItemStack> getActualItemsByItemNum(int itemNum) {

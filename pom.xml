@@ -50,12 +50,6 @@
             <artifactId>vavr</artifactId>
             <version>0.10.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.github.JaimeTruman</groupId>
-            <artifactId>Java-DDD</artifactId>
-            <version>1.1.17</version>
-        </dependency>
     </dependencies>
 
     <build>
