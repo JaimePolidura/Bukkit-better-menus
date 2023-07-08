@@ -157,6 +157,10 @@ public abstract class Menu<T> {
         }
     }
 
+    public final int getActualSlotByItemNum(int itemNum) {
+        return getActualPage().getSlotByItemNum(itemNum);
+    }
+
     public final void forEachActualItemsByItemNum(int itemNum, BiConsumer<ItemStack, Integer> consumerItemSlot) {
         getActualPage().forEachItemByItemNum(itemNum, consumerItemSlot);
     }

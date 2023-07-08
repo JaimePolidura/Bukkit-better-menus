@@ -22,6 +22,18 @@ public final class Page {
         return this.itemsNums[row][column];
     }
 
+    public int getSlotByItemNum(int itemNum) {
+        int maxCols = this.itemsNums[0].length;
+
+        for (int rows = 0; rows < itemsNums.length; rows++) {
+            for (int columns = 0; columns < itemsNums[columns].length; columns++) {
+                if(itemsNums[rows][columns] == itemNum){
+                    return rows * maxCols + columns;
+                }
+            }
+        }
+    }
+
     public void setItem(ItemStack item, int slot, int itemNum) {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
@@ -31,9 +43,6 @@ public final class Page {
     }
 
     public void updateItem(ItemStack item, int slot) {
-        int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
-        int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
-
         items.set(slot, item);
     }
 
