@@ -26,7 +26,7 @@ public final class Page {
         int maxCols = this.itemsNums[0].length;
 
         for (int rows = 0; rows < itemsNums.length; rows++) {
-            for (int columns = 0; columns < itemsNums[columns].length; columns++) {
+            for (int columns = 0; columns < itemsNums[rows].length; columns++) {
                 if(itemsNums[rows][columns] == itemNum){
                     return rows * maxCols + columns + 1; //slot
                 }

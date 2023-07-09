@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.function.BiConsumer;
 
-
 @RequiredArgsConstructor
 public final class MenuTimer {
     private final BiConsumer<BukkitRunnable, Integer> onTick;
@@ -15,14 +14,22 @@ public final class MenuTimer {
     private final long runEveryTick;
 
     private int timesCalled;
-    
+
+    private BukkitRunnable runnable;
+
     public void start() {
+        this.runnable = new MenuTimerRunnable();
+
         Bukkit.getScheduler().runTaskTimer(
                 BukkitBetterMenus.PLUGIN,
-                new MenuTimerRunnable(),
+                runnable,
                 0L,
                 runEveryTick
         );
+    }
+
+    public void stop() {
+        runnable.cancel();
     }
 
     public static MenuTimer createTimer(TimerExecutionType executionType, long runEveryTick, BiConsumer<BukkitRunnable, Integer> onTick) {

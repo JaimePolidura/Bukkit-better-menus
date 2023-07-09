@@ -106,6 +106,10 @@ public abstract class Menu<T> {
         this.configuration.getTimers().forEach(MenuTimer::start);
     }
 
+    public final void stopTimers() {
+        this.configuration.getTimers().forEach(MenuTimer::stop);
+    }
+
     public final void setItem(int pageId, int slotItem, ItemStack newItem, int itemNum) {
         Page page = pages.get(pageId);
 
