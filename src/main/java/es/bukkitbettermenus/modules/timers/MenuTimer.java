@@ -24,7 +24,7 @@ public final class MenuTimer {
         );
     }
 
-    public static MenuTimer of(TimerExecutionType executionType, long runEveryTick, BiConsumer<BukkitRunnable, Integer> onTick) {
+    public static MenuTimer createTimer(TimerExecutionType executionType, long runEveryTick, BiConsumer<BukkitRunnable, Integer> onTick) {
         return  new MenuTimer(executionType, runEveryTick, onTick);
     }
 
