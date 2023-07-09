@@ -22,14 +22,9 @@ public final class MenuTimer {
         this.runnable = new MenuTimerRunnable();
         this.timesCalled = 0;
     }
-
+    
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(
-                BukkitBetterMenus.PLUGIN,
-                runnable,
-                0L,
-                runEveryTick
-        );
+        this.runnable.runTaskTimer(BukkitBetterMenus.PLUGIN, 0L, runEveryTick);
     }
 
     public void stop() {
