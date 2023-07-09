@@ -110,11 +110,11 @@ public abstract class Menu<T> {
         this.configuration.getTimers().forEach(MenuTimer::stop);
     }
 
-    public final void setItem(int pageId, int slotItem, ItemStack newItem, int itemNum) {
+    public final void setItem(int pageId, int itemSlot, ItemStack newItem, int itemNum) {
         Page page = pages.get(pageId);
 
-        inventory.setItem(slotItem, newItem);
-        page.setItem(newItem, slotItem, itemNum);
+        inventory.setItem(itemSlot, newItem);
+        page.setItem(newItem, itemSlot, itemNum);
     }
 
     public final int getActualItemNumBySlot(int slot) {
@@ -141,12 +141,11 @@ public abstract class Menu<T> {
 
         setActualItem(slot, itemEdited, itemNum);
     }
-
+    
     public final void setItemLore(int pageId, int slot, int index, String newLore) {
         Page page = this.pages.get(pageId);
-        int itemIndex = slot - 1;
 
-        ItemStack item = page.getItems().get(itemIndex);
+        ItemStack item = page.getItems().get(slot);
         ItemUtils.setLore(item, index, newLore);
 
         page.updateItem(item, slot);

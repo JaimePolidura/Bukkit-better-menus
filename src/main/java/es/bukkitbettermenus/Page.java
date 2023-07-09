@@ -28,7 +28,7 @@ public final class Page {
         for (int rows = 0; rows < itemsNums.length; rows++) {
             for (int columns = 0; columns < itemsNums[rows].length; columns++) {
                 if(itemsNums[rows][columns] == itemNum){
-                    return rows * maxCols + columns + 1; //slot
+                    return rows * maxCols + columns; //slot
                 }
             }
         }
@@ -39,24 +39,20 @@ public final class Page {
     public void setItem(ItemStack item, int slot, int itemNum) {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
-        int itemIndex = slot - 1;
 
-        items.set(itemIndex, item);
+        items.set(slot, item);
         itemsNums[row][column] = itemNum;
     }
 
     public void updateItem(ItemStack item, int slot) {
-        int itemIndex = slot - 1;
-
-        items.set(itemIndex, item);
+        items.set(slot, item);
     }
 
     public void clearItem(int slot) {
         int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
         int column = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
-        int itemIndex = slot - 1;
 
-        items.set(itemIndex, new ItemStack(Material.AIR));
+        items.set(slot, new ItemStack(Material.AIR));
         itemsNums[row][column] = 0;
     }
 
@@ -66,10 +62,9 @@ public final class Page {
         for (int rows = 0; rows < this.itemsNums.length; rows++) {
             for (int columns = 0; columns < this.itemsNums[rows].length; columns++) {
                 if(itemsNums[rows][columns] == itemNum) {
-                    int itemIndex = rows * maxCols + columns;
-                    int slot = itemIndex + 1;
-                    ItemStack item = items.get(itemIndex);
+                    int slot = rows * maxCols + columns;
 
+                    ItemStack item = items.get(slot);
                     consumer.accept(item, slot);
                 }
             }

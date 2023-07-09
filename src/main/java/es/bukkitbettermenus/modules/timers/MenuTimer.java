@@ -2,7 +2,6 @@ package es.bukkitbettermenus.modules.timers;
 
 import es.bukkitbettermenus.BukkitBetterMenus;
 import io.vavr.control.Try;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.function.BiConsumer;
@@ -22,9 +21,9 @@ public final class MenuTimer {
         this.runnable = new MenuTimerRunnable();
         this.timesCalled = 0;
     }
-    
+
     public void start() {
-        this.runnable.runTaskTimer(BukkitBetterMenus.PLUGIN, 0L, runEveryTick);
+        runnable.runTaskTimer(BukkitBetterMenus.PLUGIN, 0L, runEveryTick);
     }
 
     public void stop() {
