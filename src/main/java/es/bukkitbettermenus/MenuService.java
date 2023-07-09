@@ -62,9 +62,9 @@ public class MenuService {
 
         if(menu.getConfiguration().isStaticMenu()) this.staticMenuRepository.save(menu);
 
-        menu.startTimers();
-
         callAfterShow(menu, player);
+
+        menu.startTimers();
     }
 
     public Menu<?> buildMenu(Player player, Class<? extends Menu> menuClass) {
