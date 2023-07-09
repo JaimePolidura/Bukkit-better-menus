@@ -1,6 +1,7 @@
 package es.bukkitbettermenus;
 
 import es.bukkitbettermenus.configuration.MenuConfiguration;
+import es.bukkitbettermenus.modules.timers.MenuTimer;
 import es.bukkitbettermenus.utils.ItemUtils;
 import es.bukkitbettermenus.utils.TriConsumer;
 import lombok.Getter;
@@ -99,6 +100,10 @@ public abstract class Menu<T> {
 
     public final void setActualItem(int slotItem, ItemStack newItem, int itemNum) {
         setItem(actualPageId, slotItem, newItem, itemNum);
+    }
+
+    public final void startTimers() {
+        this.configuration.getTimers().forEach(MenuTimer::start);
     }
 
     public final void setItem(int pageId, int slotItem, ItemStack newItem, int itemNum) {

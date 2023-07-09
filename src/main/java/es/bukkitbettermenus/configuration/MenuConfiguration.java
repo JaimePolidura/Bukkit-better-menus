@@ -7,6 +7,8 @@ import es.bukkitbettermenus.modules.numberselector.NumberSelectorControllItem;
 import es.bukkitbettermenus.modules.numberselector.NumberSelectorMenuConfiguration;
 import es.bukkitbettermenus.modules.pagination.PaginationConfiguration;
 import es.bukkitbettermenus.modules.sync.SyncMenuConfiguration;
+import es.bukkitbettermenus.modules.timers.MenuTimer;
+import es.bukkitbettermenus.modules.timers.TimersConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -15,10 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,6 +40,7 @@ public class MenuConfiguration {
     @Getter private final Map<String, Object> properties;
     @Getter private final SyncMenuConfiguration syncMenuConfiguration;
     @Getter private final Consumer<Page> onPageChanged;
+    @Getter private final List<MenuTimer> timers;
 
     public static MenuConfigurationBuilder builder(){
         return new MenuConfigurationBuilder();
@@ -87,8 +87,10 @@ public class MenuConfiguration {
         private final Map<String, Object> properties;
         private SyncMenuConfiguration syncMenuConfiguration;
         private Consumer<Page> onPageChanged;
+        private List<MenuTimer> timers;
 
         public MenuConfigurationBuilder(){
+            this.timers = new ArrayList<>();
             this.itemFunctions = new HashMap<>();
             this.items = new HashMap<>();
             this.onClickEventListeners = new HashMap<>();
@@ -102,7 +104,17 @@ public class MenuConfiguration {
             return new MenuConfiguration(itemFunctions, items, itemsFunctions, onClickEventListeners, onCloseEventListener,
                     title, fixedItems, breakpointItemNum, menuPaginationConfiguration, confirmationConfiguration,
                     staticMenu, messagingConfiguration, numberSelectorMenuConfiguration, properties,
-                    syncMenuConfiguration, onPageChanged);
+                    syncMenuConfiguration, onPageChanged, timers);
+        }
+
+        public MenuConfigurationBuilder timers(List<MenuTimer> timers){
+            this.timers.addAll(timers);
+            return this;
+        }
+
+        public MenuConfigurationBuilder timers(MenuTimer... timers){
+            this.timers.addAll(Arrays.asList(timers));
+            return this;
         }
 
         public MenuConfigurationBuilder sync(SyncMenuConfiguration configuration){

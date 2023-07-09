@@ -22,9 +22,14 @@ public final class BukkitBetterMenus {
     public static final MenuBuilderService MENU_BUILDER_SERVICE = new MenuBuilderService();
     public static final SyncMenuService SYNC_MENU_SERVICE = new SyncMenuService();
     public static MenusDependenciesInstanceProvider INSTANCE_PROVIDER = null;
+    public static Plugin PLUGIN;
 
     public static void setInstanceProvider(MenusDependenciesInstanceProvider menusDependenciesInstanceProvider) {
         INSTANCE_PROVIDER = menusDependenciesInstanceProvider;
+    }
+
+    public static void setPlugin(Plugin plugin) {
+        PLUGIN = plugin;
     }
 
     public static void registerEventListeners(Plugin plugin, PluginManager pluginManager) {
