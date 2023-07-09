@@ -8,7 +8,6 @@ import es.bukkitbettermenus.modules.numberselector.NumberSelectorMenuConfigurati
 import es.bukkitbettermenus.modules.pagination.PaginationConfiguration;
 import es.bukkitbettermenus.modules.sync.SyncMenuConfiguration;
 import es.bukkitbettermenus.modules.timers.MenuTimer;
-import es.bukkitbettermenus.modules.timers.TimersConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Material;

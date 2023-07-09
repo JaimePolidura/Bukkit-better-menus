@@ -1,5 +1,5 @@
 package es.bukkitbettermenus.modules.timers;
 
 public enum TimerExecutionType {
-    RUN_EVERY, RUN_ONCE
+    RUN_PERIODICALLY, RUN_ONCE
 }

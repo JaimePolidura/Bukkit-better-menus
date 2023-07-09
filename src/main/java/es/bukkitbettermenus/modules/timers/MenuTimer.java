@@ -24,6 +24,10 @@ public final class MenuTimer {
         );
     }
 
+    public static MenuTimer of(TimerExecutionType executionType, long runEveryTick, BiConsumer<BukkitRunnable, Integer> onTick) {
+        return  new MenuTimer(executionType, runEveryTick, onTick);
+    }
+
     private final class MenuTimerRunnable extends BukkitRunnable {
         @Override
         public void run() {
