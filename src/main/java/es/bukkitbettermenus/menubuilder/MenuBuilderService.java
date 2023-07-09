@@ -76,8 +76,8 @@ public final class MenuBuilderService {
             int row = SupportedInventoryType.getRowBySlot(i, supportedInventoryType.getBukkitInventoryType());
             int column = SupportedInventoryType.getColumnBySlot(i, supportedInventoryType.getBukkitInventoryType());
             List<ItemStack> itemsToAdd = itemMap.get(actualItemNum);
-            if(itemsToAdd == null){
-                newItemNums[row][column] = 0;
+            if(itemsToAdd == null) {
+                newItemNums[row][column] = actualItemNum;
                 continue;
             }
             if(itemsToAdd.size() == 1){

@@ -1,7 +1,7 @@
 package es.bukkitbettermenus.modules.timers;
 
 import es.bukkitbettermenus.BukkitBetterMenus;
-import lombok.RequiredArgsConstructor;
+import io.vavr.control.Try;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,7 +12,7 @@ public final class MenuTimer {
     private final TimerExecutionType executionType;
     private final long runEveryTick;
     private final BukkitRunnable runnable;
-    
+
     private int timesCalled;
 
     public MenuTimer(BiConsumer<BukkitRunnable, Integer> onTick, TimerExecutionType executionType, long runEveryTick) {
@@ -33,7 +33,7 @@ public final class MenuTimer {
     }
 
     public void stop() {
-        runnable.cancel();
+        Try.runRunnable(runnable::cancel);
     }
 
     public static MenuTimer createTimer(TimerExecutionType executionType, long runEveryTick, BiConsumer<BukkitRunnable, Integer> onTick) {
