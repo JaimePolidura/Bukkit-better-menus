@@ -1,6 +1,7 @@
 package es.bukkitbettermenus.configuration;
 
 import es.bukkitbettermenus.Page;
+import es.bukkitbettermenus.modules.async.config.AsyncTasksConfiguration;
 import es.bukkitbettermenus.modules.confirmation.ConfirmationConfiguration;
 import es.bukkitbettermenus.modules.messaging.MessagingConfiguration;
 import es.bukkitbettermenus.modules.numberselector.NumberSelectorControllItem;
@@ -40,6 +41,7 @@ public class MenuConfiguration {
     @Getter private final SyncMenuConfiguration syncMenuConfiguration;
     @Getter private final Consumer<Page> onPageChanged;
     @Getter private final List<MenuTimer> timers;
+    @Getter private final AsyncTasksConfiguration asyncTasksConfiguration;
 
     public static MenuConfigurationBuilder builder(){
         return new MenuConfigurationBuilder();
@@ -87,6 +89,7 @@ public class MenuConfiguration {
         private SyncMenuConfiguration syncMenuConfiguration;
         private Consumer<Page> onPageChanged;
         private List<MenuTimer> timers;
+        private AsyncTasksConfiguration asyncTasksConfiguration;
 
         public MenuConfigurationBuilder(){
             this.timers = new ArrayList<>();
@@ -103,7 +106,12 @@ public class MenuConfiguration {
             return new MenuConfiguration(itemFunctions, items, itemsFunctions, onClickEventListeners, onCloseEventListener,
                     title, fixedItems, breakpointItemNum, menuPaginationConfiguration, confirmationConfiguration,
                     staticMenu, messagingConfiguration, numberSelectorMenuConfiguration, properties,
-                    syncMenuConfiguration, onPageChanged, timers);
+                    syncMenuConfiguration, onPageChanged, timers, asyncTasksConfiguration);
+        }
+
+        public MenuConfigurationBuilder asyncTasks(AsyncTasksConfiguration asyncConfiguration){
+            this.asyncTasksConfiguration = asyncConfiguration;
+            return this;
         }
 
         public MenuConfigurationBuilder timers(List<MenuTimer> timers){

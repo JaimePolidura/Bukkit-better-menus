@@ -1,6 +1,7 @@
 package es.bukkitbettermenus;
 
 import es.bukkitbettermenus.configuration.MenuConfiguration;
+import es.bukkitbettermenus.modules.async.AsyncTasksMenuContext;
 import es.bukkitbettermenus.modules.timers.MenuTimer;
 import es.bukkitbettermenus.utils.ItemUtils;
 import es.bukkitbettermenus.utils.TriConsumer;
@@ -23,11 +24,13 @@ public abstract class Menu<T> {
     @Getter private int actualPageId;
     @Setter private List<Page> pages;
     private MenuConfiguration configuration;
+    private AsyncTasksMenuContext asyncTasksMenuContext;
 
     @Getter @Setter private T state;
     @Getter @Setter private Player player;
 
     public Menu() {
+        this.asyncTasksMenuContext = new AsyncTasksMenuContext(configuration.getAsyncTasksConfiguration());
         this.baseItemNums = this.items();
         this.actualPageId = 0;
         this.pages = new ArrayList<>();
@@ -102,8 +105,16 @@ public abstract class Menu<T> {
         setItem(actualPageId, slotItem, newItem, itemNum);
     }
 
+    public final void startAsyncTasks() {
+        this.asyncTasksMenuContext.start(getActualPage());
+    }
+
     public final void startTimers() {
         this.configuration.getTimers().forEach(MenuTimer::start);
+    }
+
+    public final void stopAsyncTasks() {
+        this.asyncTasksMenuContext.onMenuClosed();
     }
 
     public final void stopTimers() {
@@ -141,7 +152,7 @@ public abstract class Menu<T> {
 
         setActualItem(slot, itemEdited, itemNum);
     }
-    
+
     public final void setItemLore(int pageId, int slot, int index, String newLore) {
         Page page = this.pages.get(pageId);
 
@@ -246,6 +257,7 @@ public abstract class Menu<T> {
     private void callOnPageChangedCallback(Page newPage) {
         if(configuration.getOnPageChanged() != null) {
             configuration.getOnPageChanged().accept(newPage);
+            asyncTasksMenuContext.onPageChanged(newPage);
         }
     }
 }

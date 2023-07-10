@@ -58,12 +58,15 @@ public class MenuService {
 
         player.openInventory(menu.getInventory());
 
-        this.openMenuRepository.save(player.getName(), menu);
+        openMenuRepository.save(player.getName(), menu);
 
-        if(menu.getConfiguration().isStaticMenu()) this.staticMenuRepository.save(menu);
+        if(menu.getConfiguration().isStaticMenu()) {
+            staticMenuRepository.save(menu);
+        }
 
         callAfterShow(menu, player);
 
+        menu.startAsyncTasks();
         menu.startTimers();
     }
 
