@@ -10,12 +10,12 @@ public final class AsyncTasksMenuContext {
     private final List<AsyncTaskOnPageLoaded> asyncTasksOnPageLoaded;
     private final List<Thread> wholePageAsyncTasks;
 
-    public AsyncTasksMenuContext(AsyncTasksConfiguration configuration) {
+    public AsyncTasksMenuContext(AsyncTasksConfiguration asyncConfiguration) {
         this.asyncTasksOnPageLoaded = new ArrayList<>();
         this.wholePageAsyncTasks = new ArrayList<>();
 
-        if(configuration != null){
-            initializeThreads(configuration);
+        if(asyncConfiguration != null){
+            initializeThreads(asyncConfiguration);
         }
     }
 
