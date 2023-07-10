@@ -1,12 +1,13 @@
 package es.bukkitbettermenus.modules.async.config;
 
+import es.bukkitbettermenus.Page;
+import es.bukkitbettermenus.utils.TriConsumer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 @AllArgsConstructor
 public final class AsyncTasksConfiguration {
@@ -30,7 +31,7 @@ public final class AsyncTasksConfiguration {
             return new AsyncTasksConfiguration(asyncTaskOnPageLoaded, asyncTaskWholeMenus);
         }
 
-        public Builder onPageLoaded(int itemNum, BiConsumer<ItemStack, Integer> consumer) {
+        public Builder onPageLoaded(int itemNum, TriConsumer<Page, Integer, ItemStack> consumer) {
             this.asyncTaskOnPageLoaded.add(new AsyncTaskOnPageLoadedConfiguration(itemNum, consumer));
             return this;
         }

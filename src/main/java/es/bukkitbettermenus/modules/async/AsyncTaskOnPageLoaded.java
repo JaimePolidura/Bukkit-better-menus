@@ -25,7 +25,7 @@ public final class AsyncTaskOnPageLoaded {
         Thread thread = new Thread(() -> {
             List<ItemStack> items = page.getItemsByItemNum(configuration.getItemNum());
             int initialSlot = page.getSlotByItemNum(configuration.getItemNum());
-
+            
             for (int i = 0; i < items.size(); i++) {
                 if(Thread.currentThread().isInterrupted()){
                     break;
@@ -34,7 +34,7 @@ public final class AsyncTaskOnPageLoaded {
                 ItemStack item = items.get(i);
                 int actualSlot = initialSlot + i;
 
-                configuration.getConsumer().accept(item, actualSlot);
+                configuration.getConsumer().consume(page, actualSlot, item);
             }
         });
 
