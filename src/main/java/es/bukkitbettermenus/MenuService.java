@@ -42,6 +42,12 @@ public class MenuService {
         return menu;
     }
 
+    public <T> void open(Player player, Menu<T> menu, T state) {
+        menu.setState(state);
+
+        open(player, menu);
+    }
+
     public void open(Player player, Menu<?> menu){
         try {
             tryToOpenMenu(player, menu);

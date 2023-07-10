@@ -166,6 +166,10 @@ public abstract class Menu<T> {
         }
     }
 
+    public final ItemStack getActualItemBySlot(int slot) {
+        return this.getActualPage().getItems().get(slot);
+    }
+
     public final List<ItemStack> getActualItemsByItemNum(int itemNum) {
         return this.getActualPage().getItemsByItemNum(itemNum);
     }
