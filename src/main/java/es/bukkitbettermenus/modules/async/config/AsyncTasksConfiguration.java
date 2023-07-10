@@ -13,6 +13,10 @@ public final class AsyncTasksConfiguration {
     @Getter private final List<AsyncTaskOnPageLoadedConfiguration> asyncTaskOnPageLoaded;
     @Getter private final List<AsyncTaskWholeMenuConfiguration> asyncTaskWholeMenus;
 
+    public static AsyncTasksConfiguration.Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private List<AsyncTaskOnPageLoadedConfiguration> asyncTaskOnPageLoaded;
         private List<AsyncTaskWholeMenuConfiguration> asyncTaskWholeMenus;
