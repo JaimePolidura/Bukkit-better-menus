@@ -30,7 +30,7 @@ public abstract class Menu<T> {
     @Getter @Setter private Player player;
 
     public Menu() {
-        this.asyncTasksMenuContext = new AsyncTasksMenuContext(configuration.getAsyncTasksConfiguration());
+        this.asyncTasksMenuContext = new AsyncTasksMenuContext(getConfiguration().getAsyncTasksConfiguration());
         this.baseItemNums = this.items();
         this.actualPageId = 0;
         this.pages = new ArrayList<>();
@@ -44,8 +44,8 @@ public abstract class Menu<T> {
     public final void close() {
         player.closeInventory();
     }
-
-    public final MenuConfiguration getConfiguration() {
+    
+    public synchronized final MenuConfiguration getConfiguration() {
         return this.configuration == null ? this.configuration = configuration() : this.configuration;
     }
 
