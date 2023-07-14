@@ -90,7 +90,7 @@ public class SimpleMenu extends Menu<Transaction> {
         return MenuConfiguration.builder()
                 .title("Simple menu")
                 .fixedItems() //Players cannot take items
-                .item(1, Material.BLACK_STAINED_GLASS_PANE, (player, event) -> player.sendMessage("Right"))
+                .item(1, Material.BLACK_STAINED_GLASS_PANE)
                 .item(2, buildItemTransaction())
                 .item(9, buildItemClose(), (player, event) -> player.closeInventory())
                 .onClose(event -> event.getPlayer().sendMessage("You have closed the inventory"))
