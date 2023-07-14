@@ -14,7 +14,7 @@
     <dependency>
         <groupId>com.github.JaimeTruman</groupId>
         <artifactId>Bukkit-better-menus</artifactId>
-        <version>1.3.5</version>
+        <version>1.3.6</version>
     </dependency>
 </dependencies>
 ```
@@ -90,7 +90,6 @@ public class SimpleMenu extends Menu<Transaction> {
         return MenuConfiguration.builder()
                 .title("Simple menu")
                 .fixedItems() //Players cannot take items
-                .staticMenu() //Only one instance of inventory will be created
                 .item(1, Material.BLACK_STAINED_GLASS_PANE)
                 .item(2, buildItemTransaction())
                 .item(9, buildItemClose(), (player, event) -> player.closeInventory())
