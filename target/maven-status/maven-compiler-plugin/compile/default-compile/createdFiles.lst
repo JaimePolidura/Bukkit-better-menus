@@ -1,0 +1,6 @@
+es\bukkitbettermenus\modules\async\config\AsyncTaskWholeMenuConfiguration.class
+es\bukkitbettermenus\modules\async\config\AsyncTasksConfiguration.class
+es\bukkitbettermenus\modules\async\config\AsyncTaskOnPageLoadedConfiguration.class
+es\bukkitbettermenus\modules\async\AsyncTaskOnPageLoaded.class
+es\bukkitbettermenus\modules\async\AsyncTasksMenuContext.class
+es\bukkitbettermenus\modules\async\config\AsyncTasksConfiguration$Builder.class

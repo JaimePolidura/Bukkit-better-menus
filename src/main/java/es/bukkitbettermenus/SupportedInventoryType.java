@@ -8,6 +8,7 @@ import java.util.Arrays;
 public enum SupportedInventoryType {
     HOPPER(InventoryType.HOPPER, 1, 5),
     CHEST(InventoryType.CHEST, 3, 9),
+    CRAFTING_TABLE(InventoryType.CRAFTING, 3, 3),
     BIG_CHEST(InventoryType.CHEST, 6, 9);
 
     @Getter private final InventoryType bukkitInventoryType;

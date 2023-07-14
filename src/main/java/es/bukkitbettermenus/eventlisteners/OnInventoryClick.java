@@ -3,13 +3,16 @@ package es.bukkitbettermenus.eventlisteners;
 import es.bukkitbettermenus.BukkitBetterMenus;
 import es.bukkitbettermenus.Menu;
 import es.bukkitbettermenus.MenuService;
+import es.bukkitbettermenus.configuration.ItemClickedListener;
 import es.bukkitbettermenus.repository.OpenMenuRepository;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 import static org.bukkit.ChatColor.DARK_RED;
@@ -49,23 +52,37 @@ public class OnInventoryClick implements Listener {
         if (!inventorTypePlayer){
             int itemNumClicked = menu.getActualItemNumBySlot(event.getSlot());
 
-            performOnClickInMenu(event, menu, itemNumClicked);
+            ItemClickedListener itemClickedListener = getItemClickedListener(menu, event.getAction(), itemNumClicked);
+
+            if(itemClickedListener != null){
+                performOnClickInMenu(event, menu, itemNumClicked, itemClickedListener);
+            }
         }
     }
 
-    private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int itemNumClicked) {
+    private void performOnClickInMenu(InventoryClickEvent event, Menu menu, int itemNumClicked, ItemClickedListener itemClickedListener) {
         try{
-            BiConsumer<Player, InventoryClickEvent> onClick = menu.getConfiguration().getOnClickEventListeners()
-                    .get(itemNumClicked);
-
-            if (onClick != null){
-                onClick.accept((Player) event.getWhoClicked(), event);
-            }
+            itemClickedListener.accept((Player) event.getWhoClicked(), event);
 
             OnMenuModulesClickedListeners.notify((Player) event.getWhoClicked(), menu, itemNumClicked);
         }catch (Exception e) {
             event.getWhoClicked().sendMessage(DARK_RED + e.getMessage());
             this.menuService.close((Player) event.getWhoClicked());
         }
+    }
+
+    @Nullable
+    private ItemClickedListener getItemClickedListener(Menu menu, InventoryAction action, int itemNum) {
+        boolean isLeftClick = action == InventoryAction.NOTHING || action == InventoryAction.PICKUP_ALL;
+        boolean isRightClick = action == InventoryAction.PICKUP_HALF;
+
+        if(isLeftClick){
+            return menu.getConfiguration().getOnLeftClickEventListeners().get(itemNum);
+        }
+        if(isRightClick){
+            return menu.getConfiguration().getOnRightClickEventListeners().get(itemNum);
+        }
+
+        return null;
     }
 }

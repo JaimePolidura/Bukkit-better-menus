@@ -15,10 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public final class MenuBuilderService {
-    public List<Page> createPages(MenuConfiguration configuration, int[][] baseItemNums, Player player){
+    public List<Page> createPages(MenuConfiguration configuration, int[][] baseItemNums){
         List<Page> pages = new LinkedList<>();
-
-        addToItemMapsItemsFunctions(configuration, player);
 
         Queue<ItemStack> variousItemsItemStack = findVariousItems(configuration);
         int variousItemStack = findVariousItemsItemNum(configuration);
@@ -34,17 +32,6 @@ public final class MenuBuilderService {
         }
 
         return pages;
-    }
-
-    private void addToItemMapsItemsFunctions(MenuConfiguration configuration, Player player) {
-        configuration.getItemFunctions().forEach((itemNum, itemFunction) -> {
-            ItemStack itemStack = itemFunction.apply(player);
-            configuration.getItems().put(itemNum, Collections.singletonList(itemStack));
-        });
-        configuration.getItemsFunctions().forEach((itemNum, itemsFunction) -> {
-            List<ItemStack> items = itemsFunction.apply(player);
-            configuration.getItems().put(itemNum, items);
-        });
     }
 
     private Queue<ItemStack> findVariousItems(MenuConfiguration configuration) {

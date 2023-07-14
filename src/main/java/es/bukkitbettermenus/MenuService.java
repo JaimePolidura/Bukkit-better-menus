@@ -116,8 +116,8 @@ public class MenuService {
     public List<Page> buildPages(Player player, Menu<?> menu){
         return menu.getConfiguration().isStaticMenu() ?
                 staticMenuRepository.findByMenuClass(menu.getClass())
-                        .orElse(newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player)) :
-                newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums(), player);
+                        .orElse(newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums())) :
+                newMenuBuilderService.createPages(menu.getConfiguration(), menu.getBaseItemNums());
     }
 
     private void callAfterShow(Menu<?> menu, Player player) {
