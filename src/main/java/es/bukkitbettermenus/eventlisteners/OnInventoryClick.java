@@ -32,6 +32,8 @@ public class OnInventoryClick implements Listener {
 
         if(event.getClickedInventory() == null) return;
 
+        event.getWhoClicked().sendMessage();
+
         this.openMenuRepository.findByPlayerName(playerName).ifPresent(menu -> {
             try{
                 tryPerformClickOnMenu(event, menu);

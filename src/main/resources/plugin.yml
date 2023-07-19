@@ -1,4 +1,0 @@
-name: BukkitMenus
-version: '${project.version}'
-main: es.bukkitbettermenus.BukkitMenus
-api-version: 1.19
