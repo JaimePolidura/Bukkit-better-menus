@@ -103,7 +103,7 @@ public class SimpleMenu extends Menu<Transaction> {
                 .lore(Arrays.asList(
                         "Payer: " + getState().payerName,
                         "Payee: " + getState().payeeName,
-                        "money: " + getState().money
+                        "Money: " + getState().money
                 ))
                 .build();
     }
@@ -212,8 +212,8 @@ public class SynchronizedItemMarketMenu extends Menu {
     @Override
     public MenuConfiguration configuration() {
         return MenuConfiguration.builder()
-                .title("titulo")
-                .fixedItems("Synchronized")
+                .title("Synchronized")
+                .fixedItems()
                 .items(1, oakLog(), (p, e) -> giveOneItemToPlayer(p, e.getCurrentItem(), e.getSlot()))
                 .sync(SyncMenuConfiguration.builder()
                         .mapper(this::mapItemToSync)
@@ -250,7 +250,7 @@ public class SynchronizedItemMarketMenu extends Menu {
     //When syncMenuService.sync(menu) is called, a copy of the menu's items will be displayed to all players, who have open the same menu.
     //If some of the items have to be different depending on the player, you can use this function. This function takes the original item from
     //the caller of syncMenuService.sync(menu) and returns the item to be displayed in the menu.
-    private ItemStack mapSyncedOfertaItem(ItemStack itemToSync, Integer itemNum) {
+    private ItemStack mapItemToSync(ItemStack itemToSync, Integer itemNum) {
         return itemToSync;
     }
     
