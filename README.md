@@ -1,4 +1,5 @@
 # Bukkit-Menus
+This library will allow you to build menus in a clear and easy way.
 
 ## Setup
 
