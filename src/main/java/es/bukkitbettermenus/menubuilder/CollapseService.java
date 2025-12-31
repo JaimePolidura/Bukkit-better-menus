@@ -11,7 +11,7 @@ import java.util.Queue;
 public class CollapseService {
     public void collapse(Menu<?> menu) {
         for (Page page : menu.getPages()) {
-            for (var collapseConfiguration : menu.getConfiguration().getCollapseConfiguration()) {
+            for (MenuConfiguration.CollapseConfiguration collapseConfiguration : menu.getConfiguration().getCollapseConfiguration()) {
                 collapse(page, collapseConfiguration);
             }
         }
