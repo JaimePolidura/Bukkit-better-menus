@@ -1,5 +1,6 @@
 package es.bukkitbettermenus;
 
+import es.bukkitbettermenus.menubuilder.CollapseService;
 import es.bukkitbettermenus.menubuilder.MenuBuilderService;
 import es.bukkitbettermenus.menustate.AfterShow;
 import es.bukkitbettermenus.menustate.BeforeShow;
@@ -18,12 +19,14 @@ public class MenuService {
     private final StaticMenuRepository staticMenuRepository;
     private final MenuBuilderService newMenuBuilderService;
     private final OpenMenuRepository openMenuRepository;
+    private final CollapseService collapseService;
 
     public MenuService() {
-        this.menuConstructorResolver = new MenuConstructorResolver();
+        this.menuConstructorResolver = BukkitBetterMenus.MENU_CONSTRUCTOR_RESOLVER;
         this.staticMenuRepository = BukkitBetterMenus.STATIC_MENUS_REPOSITORY;
         this.openMenuRepository = BukkitBetterMenus.OPEN_MENUS_REPOSITORY;
-        this.newMenuBuilderService = new MenuBuilderService();
+        this.newMenuBuilderService = BukkitBetterMenus.MENU_BUILDER_SERVICE;
+        this.collapseService = BukkitBetterMenus.COLLAPSE_SERVICE;
     }
 
     public <T> Menu<T> open(Player player, Class<? extends Menu<T>> menuClass, T initialState) {
@@ -147,5 +150,6 @@ public class MenuService {
         menu.addPages(buildPages(player, menu));
         menu.setInventory(createEmptyInventory(menu));
         menu.initializeInventoryWithFirstPage();
+        collapseService.collapse(menu);
     }
 }

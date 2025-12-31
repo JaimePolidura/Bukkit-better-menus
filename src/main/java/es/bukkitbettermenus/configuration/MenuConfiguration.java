@@ -10,6 +10,7 @@ import es.bukkitbettermenus.modules.pagination.PaginationConfiguration;
 import es.bukkitbettermenus.modules.sync.SyncMenuConfiguration;
 import es.bukkitbettermenus.modules.timers.MenuTimer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
@@ -38,6 +39,7 @@ public class MenuConfiguration {
     @Getter private final Consumer<Page> onPageChanged;
     @Getter private final List<MenuTimer> timers;
     @Getter private final AsyncTasksConfiguration asyncTasksConfiguration;
+    @Getter private final List<CollapseConfiguration> collapseConfiguration;
 
     public static MenuConfigurationBuilder builder(){
         return new MenuConfigurationBuilder();
@@ -85,6 +87,7 @@ public class MenuConfiguration {
         private Consumer<Page> onPageChanged;
         private List<MenuTimer> timers;
         private AsyncTasksConfiguration asyncTasksConfiguration;
+        private List<CollapseConfiguration> collapseConfiguration;
 
         public MenuConfigurationBuilder(){
             this.timers = new ArrayList<>();
@@ -100,7 +103,31 @@ public class MenuConfiguration {
             return new MenuConfiguration(items, onLeftClickEventListeners, onRightClickEventListeners, onCloseEventListener,
                     title, fixedItems, breakpointItemNum, menuPaginationConfiguration, confirmationConfiguration,
                     staticMenu, messagingConfiguration, numberSelectorMenuConfiguration, properties,
-                    syncMenuConfiguration, onPageChanged, timers, asyncTasksConfiguration);
+                    syncMenuConfiguration, onPageChanged, timers, asyncTasksConfiguration, collapseConfiguration);
+        }
+
+        public MenuConfigurationBuilder collapse(int startItemNum, int endItemNum) {
+            collapse(Material.AIR, startItemNum, endItemNum);
+            return this;
+        }
+
+        public MenuConfigurationBuilder collapse(Material material, int startItemNum, int endItemNum) {
+            this.collapseConfiguration.add(CollapseConfiguration.builder()
+                    .collapseMaterial(material)
+                    .startItemNum(startItemNum)
+                    .endItemNum(endItemNum)
+                    .build());
+            return this;
+        }
+
+        public MenuConfigurationBuilder collapse(CollapseConfiguration collapseConfiguration) {
+            this.collapseConfiguration.add(collapseConfiguration);
+            return this;
+        }
+
+        public MenuConfigurationBuilder collapse(List<CollapseConfiguration> collapseConfigurations) {
+            this.collapseConfiguration.addAll(collapseConfigurations);
+            return this;
         }
 
         public MenuConfigurationBuilder asyncTasks(AsyncTasksConfiguration asyncConfiguration){
@@ -350,5 +377,14 @@ public class MenuConfiguration {
             this.breakpointItemNum = itemNum;
             return this;
         }
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class CollapseConfiguration {
+        private final int startItemNum;
+        private final int endItemNum;
+        private final Material collapseMaterial;
     }
 }

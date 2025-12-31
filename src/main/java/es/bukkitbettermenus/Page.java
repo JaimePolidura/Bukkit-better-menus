@@ -44,6 +44,10 @@ public final class Page {
         itemsNums[row][column] = itemNum;
     }
 
+    public ItemStack getItemBySlot(int slot) {
+        return this.items.get(slot);
+    }
+
     public void updateItem(ItemStack item, int slot) {
         items.set(slot, item);
     }
@@ -85,6 +89,26 @@ public final class Page {
         }
 
         return toReturn;
+    }
+
+    public void swapItemBySlot(int slotDst, int slotSrc) {
+        int rowDst = SupportedInventoryType.getRowBySlot(slotDst, itemsNums);
+        int colDst = SupportedInventoryType.getColumnBySlot(slotDst, itemsNums);
+        int rowSrc = SupportedInventoryType.getRowBySlot(slotSrc, itemsNums);
+        int colSrc = SupportedInventoryType.getColumnBySlot(slotSrc, itemsNums);
+        int toBeSwappedItemNum = itemsNums[rowDst][colDst];
+        itemsNums[rowDst][colDst] = itemsNums[rowSrc][colSrc];
+        itemsNums[rowSrc][colSrc] = toBeSwappedItemNum;
+
+        ItemStack toBeSwappedItem = items.get(slotSrc);
+        items.set(slotSrc, items.get(slotDst));
+        items.set(slotDst, toBeSwappedItem);
+    }
+
+    public int getItemNumBySlot(int slot) {
+        int row = SupportedInventoryType.getRowBySlot(slot, itemsNums);
+        int col = SupportedInventoryType.getColumnBySlot(slot, itemsNums);
+        return itemsNums[row][col];
     }
 
     public void setVisited() {

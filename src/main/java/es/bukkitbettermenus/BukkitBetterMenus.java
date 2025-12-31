@@ -2,6 +2,7 @@ package es.bukkitbettermenus;
 
 import es.bukkitbettermenus.eventlisteners.OnInventoryClick;
 import es.bukkitbettermenus.eventlisteners.OnInventoryClose;
+import es.bukkitbettermenus.menubuilder.CollapseService;
 import es.bukkitbettermenus.menubuilder.MenuBuilderService;
 import es.bukkitbettermenus.modules.messaging.MessagingMenuService;
 import es.bukkitbettermenus.modules.numberselector.NumberSelectorService;
@@ -15,12 +16,14 @@ import org.bukkit.plugin.PluginManager;
 public final class BukkitBetterMenus {
     public static final OpenMenuRepository OPEN_MENUS_REPOSITORY = new OpenMenuRepository();
     public static final StaticMenuRepository STATIC_MENUS_REPOSITORY = new StaticMenuRepository();
+    public static final CollapseService COLLAPSE_SERVICE = new CollapseService();
     public static final MenuService MENU_SERVICE = new MenuService();
     public static final MessagingMenuService MESSAGING_MENU_SERVICE = new MessagingMenuService();
     public static final NumberSelectorService NUMBER_SELECTOR_SERVICE = new NumberSelectorService();
     public static final PaginationService PAGINATION_SERVICE = new PaginationService();
     public static final MenuBuilderService MENU_BUILDER_SERVICE = new MenuBuilderService();
     public static final SyncMenuService SYNC_MENU_SERVICE = new SyncMenuService();
+    public static final MenuConstructorResolver MENU_CONSTRUCTOR_RESOLVER = new MenuConstructorResolver();
     public static MenusDependenciesInstanceProvider INSTANCE_PROVIDER = null;
     public static Plugin PLUGIN;
 
